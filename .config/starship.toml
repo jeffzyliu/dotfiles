@@ -1,0 +1,73 @@
+prompt_order = [
+    "time",
+    "username",
+    "hostname",
+    "kubernetes",
+    "directory",
+    "git_branch",
+    "git_commit",
+    "git_state",
+    "git_status",
+    "docker_context",
+    "package",
+    "golang",
+    "haskell",
+    "java",
+    "julia",
+    "nodejs",
+    "ocaml",
+    "php",
+    "purescript",
+    "python",
+    "ruby",
+    "rust",
+    "conda",
+    "memory_usage",
+    "aws",
+    "env_var",
+    "cmd_duration",
+    "custom",
+    "line_break",
+    "jobs",
+    "battery",
+    "character",
+]
+
+[cmd_duration]
+min_time = 500
+show_milliseconds = true
+
+[git_branch]
+style = "bold cyan"
+
+[git_status]
+#modified = "🖍️ "
+modified_count.enabled = true
+modified_count.style = "bold purple"
+conflicted_count.enabled = true
+conflicted_count.style = "yellow"
+stashed_count.enabled = true
+stashed_count.style = "bold blue"
+#deleted_count.enabled = true
+#deleted = "❌"
+show_sync_count = true
+#show_sync_count.style = "magenta"
+untracked_count.enabled = true
+untracked_count.style = "green"
+#untracked = "❓"
+staged_count.enabled = true
+staged_count.style = "cyan"
+
+[memory_usage]
+disabled = false
+threshold = 85
+
+[time]
+disabled = false
+format = "🕰️  %T"
+style = "212"
+
+[directory]
+truncation_length = 4
+truncate_to_repo = true
+style = "bold green"
