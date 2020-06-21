@@ -1,95 +1,68 @@
-" set up vim plug
+" -----------------------------------------------------------------------------
+" VIM PLUG PLUGIN DEFINITIONS
+" -----------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 
-Plug 'ayu-theme/ayu-vim'
-Plug 'preservim/nerdtree'
-Plug 'itchyny/lightline.vim'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-surround'
-Plug 'airblade/vim-gitgutter'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'mattn/emmet-vim'
-Plug 'w0rp/ale'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'luochen1990/rainbow'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'sheerun/vim-polyglot'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'junegunn/rainbow_parentheses.vim'
-Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-fugitive'
-Plug 'lervag/vimtex'
-" Plug 'ryanoasis/vim-devicons'
-" Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ayu-theme/ayu-vim' " ayu mirage color scheme
+Plug 'jeffkreeftmeijer/vim-numbertoggle' " tiny script to toggle line numbers
+Plug 'preservim/nerdtree' " file browser
+Plug 'itchyny/lightline.vim' " powerline-like status line
+Plug 'tpope/vim-eunuch' " convenient commands that I don't use yet
+Plug 'tpope/vim-surround' " helps change surrounding brackets/parens/quotes together
+Plug 'airblade/vim-gitgutter' " shows which lines diff in git
+Plug 'tpope/vim-fugitive' " gives tons of git power, e.g. blame by line
+Plug 'editorconfig/editorconfig-vim' " uses editorconfig to inform formatting
+Plug 'mattn/emmet-vim' " provides snippets, MAY DELETE IF ULTISNIPS IS JUST BETTER
+Plug 'sirver/ultisnips' " may replace emmet
+Plug 'w0rp/ale' " asynchronous linting engine or something
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
+Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
+Plug 'terryma/vim-multiple-cursors' " control-n to do multicursor work 
+Plug 'luochen1990/rainbow' " unused ATM since js conflict but is rainbow brackets
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " COC autocomplete engine
+Plug 'sheerun/vim-polyglot' " auto-includes various language syntax highlighters
+Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
+Plug 'tomtom/tcomment_vim' " gives the gcc and gc commands to toggle comment
+Plug 'lervag/vimtex' " latex helper
 
 call plug#end()
 
+
+" -----------------------------------------------------------------------------
+" GENERAL VIM STUFF
+" -----------------------------------------------------------------------------
 syntax on
-set number
-
+set number relativenumber " interfaces with our plugin for toggling
 set encoding=utf8
-
 set clipboard=unnamed " set yank to system keyboard
-
 set autoindent " always set autoindenting on
-
 set copyindent " copy the previous indentation on autoindenting
-
 set expandtab " expand tabs by default (overloadable per file type)
-
 set shiftround " use multiple of shiftwidth when indenting with '<' and '>'
-
 set shiftwidth=4 " number of spaces to use for autoindenting
-
 set smartindent
 set cindent
+set wrap
+set linebreak " disable wrap break in middle of a word
 set smarttab " insert tabs on the start of a line according to shiftwidth, not tabstop
-
 set softtabstop=4 " when hitting <BS>, pretend like a tab is removed, even if spaces
-
 set tabstop=4 " tabs are n spaces
-set mouse+=a
+set mouse+=a " make system mouse work
+set nomodeline " should not be useful anymore but eh
+set history=1000 " expands undo hisory
+set lazyredraw " might marginally increase performance
+set scrolloff=1 " keeps a line of margin at boom
+set backspace=indent,eol,start " supposed to make backspace bettter
+set timeoutlen=1000 ttimeoutlen=20 " speeds up exiting insert mode
+set hidden " TextEdit might fail if hidden is not set.
+set cmdheight=2 " Give more space for displaying messages.
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
-" hiding stuff
-set conceallevel=3
-set concealcursor=nvic
-
-" color support
-set termguicolors
-let ayucolor="mirage"
-colorscheme ayu
-
-" rainbow brackets on
-let g:rainbow_active = 0
-" let g:rainbow_conf = {
-" \    'javascript': {
-" \      'operators': '_,\|+\|-\|\*\|\*\*\| / \|//\|===\|!==\|==\|!=\| < \|<=\| > \|>=\|:\|%\|&\||_',
-" \      'parentheses_options': 'containedin=jsxElement fold ',
-" \      'parentheses': [
-" \        'start=/\z((\)/ end=/)/ contains=@jsAll', 'start=/\[/ end=/\]/ contains=@jsAll',
-" \        'start=/{/ end=/}/ contains=@jsAll containedin=jsTemplateString',
-" \        'start=_<\z([^ />]*\)>\?_ end=_</\z1>_ end=_/>_ contains=jsxOpenTag,jsxAttrib,jsxExpressionBlock,jsxSpreadOperator,jsComment,@javascriptComments,javaScriptLineComment,javaScriptComment',
-" \      ],
-" \      'after': [
-" \        'syn clear jsParen', 'syn clear jsFuncArgs', 'syn clear jsxExpressionBlock',
-" \        'syn clear jsParensError', 'syn clear jsParenIfElse', 'syn clear jsDestructuringBlock',
-" \        'syn clear jsFuncBlock', 'syn clear jsArrowFuncArgs', 'syn clear jsParenSwitch',
-" \        'syn clear jsBlock', 'syn clear jsObject', 'syn clear jsxTag', 'syn clear jsTemplateExpression',
-" \        'syn clear jsParenRepeat', 'syn clear jsRepeatBlock'
-" \      ],
-" \      'contains_prefix': '',
-" \    },
-" \}
-let g:rainbow_conf = {
-  \    'separately': {
-  \       'nerdtree': 0
-  \    }
-  \}
-" indent highlights on
-let g:indent_guides_enable_on_vim_startup = 1
-
+" KEYBIND SETUP
 " mapping spacebar to leader
 nnoremap <SPACE> <Nop>
 let mapleader = " "
@@ -97,29 +70,70 @@ let mapleader = " "
 " Fast saving
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
+" quit shortcut is suspiciously slow
+
+" config by filetype ??
+filetype plugin indent on
+autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab " configure js to have 2 space indents
+
+" / search tools
+set incsearch " Highlight searching
+set showmatch
+set nohlsearch " use :hlsearch if we have to
+set ignorecase
+set smartcase
+set autoread " autoread files
+
+" disable swps in current dir and moves backups there ttoo
+set backup
+set backupdir=~/.vim/backup//
+set directory=~/.vim/swap//
+set undodir=~/.vim/undo//
+" Some servers have issues with backup files, see #649.
+" set nobackup
+" set nowritebackup
+
+" -----------------------------------------------------------------------------
+" PLUGIN SETUP
+" -----------------------------------------------------------------------------
+
+" color support for ayu mirage <3
+set termguicolors
+let ayucolor="mirage"
+colorscheme ayu
+
+" rainbow brackets off bc js syn highlighting hates it
+let g:rainbow_active = 0
+
+" indent highlights on
+let g:indent_guides_enable_on_vim_startup = 1
 
 " map gitgutter refresh to leader-g
 nmap <leader>g :GitGutter<cr>
+" keep gitgutter open
+set signcolumn="yes"
 
 " Map Files to control-p
 map <C-p> :Files 
 " Map ag to control-f
 map <C-f> :Ag 
-" some fix for lightline?
+" some fix for lightline? well p sure this just makes the status bar taller
 set laststatus=2
 
 " ALE linting fixer
-let g:ale_fixers = {'javascript': ['eslint']}
-" ALE shortcut
+let g:ale_fixers = {'javascript': ['eslint']} " add more linters later
+" ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
-" keep gutter open
+" keep lint gutter open
 let g:ale_sign_column_always = 1
 
-" keep gitgutter open
-set signcolumn="yes"
-
 " enable icons?
-let g:webdevicons_enable = 1
+" let g:webdevicons_enable = 1
+
+
+" -----------------------------------------------------------------------------
+" NerdTree Config
+" -----------------------------------------------------------------------------
 
 " map nerdtreetoggle
 map <C-o> :NERDTreeToggle<CR>
@@ -132,10 +146,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 " let nerdtree highlight files differently depending on extension
-" NERDTress File highlighting
+" NERDTree File highlighting
 function! NERDTreeHighlightFile(extension, fg, guifg)
- exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
- exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+ exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+ exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
 call NERDTreeHighlightFile('c', 'green', 'green') 
@@ -152,50 +166,11 @@ call NERDTreeHighlightFile('css', 'cyan', 'cyan')
 call NERDTreeHighlightFile('coffee', 'Red', 'red')
 call NERDTreeHighlightFile('js', 'Red', '#ffa500')
 call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
-"
-" NERDTrees File highlighting
-" function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
-"  exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
-"  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-" endfunction
-"
-" call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
-" call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-" call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
-" call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
-" call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-" call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
-" call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
-" call NERDTreeHighlightFile('ds_store', 'Gray', 'none', '#686868', '#151515')
-" call NERDTreeHighlightFile('gitconfig', 'Gray', 'none', '#686868', '#151515')
-" call NERDTreeHighlightFile('gitignore', 'Gray', 'none', '#686868', '#151515')
-" call NERDTreeHighlightFile('bashrc', 'Gray', 'none', '#686868', '#151515')
-" call NERDTreeHighlightFile('bashprofile', 'Gray', 'none', '#686868', '#151515')
 
 
-
-" TextEdit might fail if hidden is not set.
-set hidden
-
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
+" -----------------------------------------------------------------------------
+" COC autocomplete engine setup
+" -----------------------------------------------------------------------------
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -251,9 +226,9 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" Formatting selected code. (currently conflicts with ALEFix so disabled)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -316,27 +291,6 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-" let NERDTreeHighlightCursorline = 0
-"
-" let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
-" let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
-" let g:NERDTreeFileExtensionHighlightFullName = 1
-" let g:NERDTreeExactMatchHighlightFullName = 1
-" let g:NERDTreePatternMatchHighlightFullName = 1
-" let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-" let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-" let g:NERDTreeLimitedSyntax = 1
-" let s:orange = "FF99
-
-" if !exists('g:syntax_on')
-" 	syntax enable
-" endif
-
-" syntax enable
-" if exists("g:loaded_webdevicons")
-" 	call webdevicons#refresh()
-" endif
-
 
 " -----------------------------------------------------------------------------
 "  VIMTEX OPTIONS
@@ -381,10 +335,9 @@ let g:vimtex_quickfix_mode = 2
 if has('nvim')
     let g:vimtex_compiler_progname = 'nvr'
 endif
-
-" One of the neosnippet plugins will conceal symbols in LaTeX which is
-" confusing
-" let g:tex_conceal = ""
+let g:vimtex_quickfix_mode=0
+set conceallevel=1 " set to 0 if hidden stuff gets confusing
+let g:tex_conceal='abdmg' 
 
 " Can hide specifc warning messages from the quickfix window
 " Quickfix with Neovim is broken or something
@@ -408,3 +361,10 @@ let g:vimtex_quickfix_latexlog = {
             \   'titlesec' : 1,
             \ },
             \}
+
+" -----------------------------------------------------------------------------
+" Utilisnips setup
+" -----------------------------------------------------------------------------
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
