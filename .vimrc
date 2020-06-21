@@ -18,9 +18,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-fugitive'
+Plug 'lervag/vimtex'
+" Plug 'ryanoasis/vim-devicons'
+" Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 call plug#end()
-
 
 syntax on
 set number
@@ -48,6 +52,10 @@ set softtabstop=4 " when hitting <BS>, pretend like a tab is removed, even if sp
 set tabstop=4 " tabs are n spaces
 set mouse+=a
 
+" hiding stuff
+set conceallevel=3
+set concealcursor=nvic
+
 " color support
 set termguicolors
 let ayucolor="mirage"
@@ -55,26 +63,30 @@ colorscheme ayu
 
 " rainbow brackets on
 let g:rainbow_active = 0
+" let g:rainbow_conf = {
+" \    'javascript': {
+" \      'operators': '_,\|+\|-\|\*\|\*\*\| / \|//\|===\|!==\|==\|!=\| < \|<=\| > \|>=\|:\|%\|&\||_',
+" \      'parentheses_options': 'containedin=jsxElement fold ',
+" \      'parentheses': [
+" \        'start=/\z((\)/ end=/)/ contains=@jsAll', 'start=/\[/ end=/\]/ contains=@jsAll',
+" \        'start=/{/ end=/}/ contains=@jsAll containedin=jsTemplateString',
+" \        'start=_<\z([^ />]*\)>\?_ end=_</\z1>_ end=_/>_ contains=jsxOpenTag,jsxAttrib,jsxExpressionBlock,jsxSpreadOperator,jsComment,@javascriptComments,javaScriptLineComment,javaScriptComment',
+" \      ],
+" \      'after': [
+" \        'syn clear jsParen', 'syn clear jsFuncArgs', 'syn clear jsxExpressionBlock',
+" \        'syn clear jsParensError', 'syn clear jsParenIfElse', 'syn clear jsDestructuringBlock',
+" \        'syn clear jsFuncBlock', 'syn clear jsArrowFuncArgs', 'syn clear jsParenSwitch',
+" \        'syn clear jsBlock', 'syn clear jsObject', 'syn clear jsxTag', 'syn clear jsTemplateExpression',
+" \        'syn clear jsParenRepeat', 'syn clear jsRepeatBlock'
+" \      ],
+" \      'contains_prefix': '',
+" \    },
+" \}
 let g:rainbow_conf = {
-\    'javascript': {
-\      'operators': '_,\|+\|-\|\*\|\*\*\| / \|//\|===\|!==\|==\|!=\| < \|<=\| > \|>=\|:\|%\|&\||_',
-\      'parentheses_options': 'containedin=jsxElement fold ',
-\      'parentheses': [
-\        'start=/\z((\)/ end=/)/ contains=@jsAll', 'start=/\[/ end=/\]/ contains=@jsAll',
-\        'start=/{/ end=/}/ contains=@jsAll containedin=jsTemplateString',
-\        'start=_<\z([^ />]*\)>\?_ end=_</\z1>_ end=_/>_ contains=jsxOpenTag,jsxAttrib,jsxExpressionBlock,jsxSpreadOperator,jsComment,@javascriptComments,javaScriptLineComment,javaScriptComment',
-\      ],
-\      'after': [
-\        'syn clear jsParen', 'syn clear jsFuncArgs', 'syn clear jsxExpressionBlock',
-\        'syn clear jsParensError', 'syn clear jsParenIfElse', 'syn clear jsDestructuringBlock',
-\        'syn clear jsFuncBlock', 'syn clear jsArrowFuncArgs', 'syn clear jsParenSwitch',
-\        'syn clear jsBlock', 'syn clear jsObject', 'syn clear jsxTag', 'syn clear jsTemplateExpression',
-\        'syn clear jsParenRepeat', 'syn clear jsRepeatBlock'
-\      ],
-\      'contains_prefix': '',
-\    },
-\}
-
+  \    'separately': {
+  \       'nerdtree': 0
+  \    }
+  \}
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
 
@@ -85,6 +97,9 @@ let mapleader = " "
 " Fast saving
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
+
+" map gitgutter refresh to leader-g
+nmap <leader>g :GitGutter<cr>
 
 " Map Files to control-p
 map <C-p> :Files 
@@ -103,6 +118,9 @@ let g:ale_sign_column_always = 1
 " keep gitgutter open
 set signcolumn="yes"
 
+" enable icons?
+let g:webdevicons_enable = 1
+
 " map nerdtreetoggle
 map <C-o> :NERDTreeToggle<CR>
 " let nerdtree activate upon just "vim"
@@ -116,8 +134,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " let nerdtree highlight files differently depending on extension
 " NERDTress File highlighting
 function! NERDTreeHighlightFile(extension, fg, guifg)
- exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
- exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+ exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+ exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
 call NERDTreeHighlightFile('c', 'green', 'green') 
@@ -134,8 +152,31 @@ call NERDTreeHighlightFile('css', 'cyan', 'cyan')
 call NERDTreeHighlightFile('coffee', 'Red', 'red')
 call NERDTreeHighlightFile('js', 'Red', '#ffa500')
 call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
-
-
+"
+" NERDTrees File highlighting
+" function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
+"  exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+"  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+" endfunction
+"
+" call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
+" call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
+" call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
+" call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
+" call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
+" call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
+" call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
+" call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
+" call NERDTreeHighlightFile('ds_store', 'Gray', 'none', '#686868', '#151515')
+" call NERDTreeHighlightFile('gitconfig', 'Gray', 'none', '#686868', '#151515')
+" call NERDTreeHighlightFile('gitignore', 'Gray', 'none', '#686868', '#151515')
+" call NERDTreeHighlightFile('bashrc', 'Gray', 'none', '#686868', '#151515')
+" call NERDTreeHighlightFile('bashprofile', 'Gray', 'none', '#686868', '#151515')
 
 
 
@@ -275,6 +316,95 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" let NERDTreeHighlightCursorline = 0
+"
+" let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
+" let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
+" let g:NERDTreeFileExtensionHighlightFullName = 1
+" let g:NERDTreeExactMatchHighlightFullName = 1
+" let g:NERDTreePatternMatchHighlightFullName = 1
+" let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+" let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+" let g:NERDTreeLimitedSyntax = 1
+" let s:orange = "FF99
+
+" if !exists('g:syntax_on')
+" 	syntax enable
+" endif
+
+" syntax enable
+" if exists("g:loaded_webdevicons")
+" 	call webdevicons#refresh()
+" endif
 
 
+" -----------------------------------------------------------------------------
+"  VIMTEX OPTIONS
+"  ----------------------------------------------------------------------------
+if has('unix')
+    if has('mac')
+        let g:vimtex_view_method = "skim"
+        let g:vimtex_view_general_viewer
+                \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+        let g:vimtex_view_general_options = '-r @line @pdf @tex'
 
+        " This adds a callback hook that updates Skim after compilation
+        let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+        function! UpdateSkim(status)
+            if !a:status | return | endif
+
+            let l:out = b:vimtex.out()
+            let l:tex = expand('%:p')
+            let l:cmd = [g:vimtex_view_general_viewer, '-r']
+            if !empty(system('pgrep Skim'))
+            call extend(l:cmd, ['-g'])
+            endif
+            if has('nvim')
+            call jobstart(l:cmd + [line('.'), l:out, l:tex])
+            elseif has('job')
+            call job_start(l:cmd + [line('.'), l:out, l:tex])
+            else
+            call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+            endif
+        endfunction
+    else
+        let g:latex_view_general_viewer = "zathura"
+        let g:vimtex_view_method = "zathura"
+    endif
+elseif has('win32')
+
+endif
+
+let g:tex_flavor = "latex"
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_mode = 2
+if has('nvim')
+    let g:vimtex_compiler_progname = 'nvr'
+endif
+
+" One of the neosnippet plugins will conceal symbols in LaTeX which is
+" confusing
+" let g:tex_conceal = ""
+
+" Can hide specifc warning messages from the quickfix window
+" Quickfix with Neovim is broken or something
+" https://github.com/lervag/vimtex/issues/773
+let g:vimtex_quickfix_latexlog = {
+            \ 'default' : 1,
+            \ 'fix_paths' : 0,
+            \ 'general' : 1,
+            \ 'references' : 1,
+            \ 'overfull' : 1,
+            \ 'underfull' : 1,
+            \ 'font' : 1,
+            \ 'packages' : {
+            \   'default' : 1,
+            \   'natbib' : 1,
+            \   'biblatex' : 1,
+            \   'babel' : 1,
+            \   'hyperref' : 1,
+            \   'scrreprt' : 1,
+            \   'fixltx2e' : 1,
+            \   'titlesec' : 1,
+            \ },
+            \}
