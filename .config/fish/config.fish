@@ -19,19 +19,3 @@ abbr --add --global mv mv -i
 abbr --add --global mkdir mkdir -p
 
 starship init fish | source
-
-#set SPACEFISH_PROMPT_ORDER vi_mode user dir host git package node docker ruby aws haskell conda pyenv venv line_sep char
-#set SPACEFISH_RPROMPT_ORDER exit_code exec_time time jobs battery
-
-set SPACEFISH_USER_SHOW always
-set SPACEFISH_USER_COLOR ff8700
-set SPACEFISH_USER_PREFIX ' ' 
-set SPACEFISH_VI_MODE_SUFFIX
-set SPACEFISH_VI_MODE_COLOR brred
-set SPACEFISH_TIME_SHOW true
-set SPACEFISH_DIR_TRUNC 4
-set SPACEFISH_DIR_TRUNC_REPO false
-set SPACEFISH_DIR_COLOR brgreen
-set SPACEFISH_GIT_BRANCH_COLOR cyan
-set SPACEFISH_HOST_SHOW_FULL true
-set SPACEFISH_EXIT_CODE_SHOW true

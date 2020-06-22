@@ -13,7 +13,7 @@ Plug 'airblade/vim-gitgutter' " shows which lines diff in git
 Plug 'tpope/vim-fugitive' " gives tons of git power, e.g. blame by line
 Plug 'editorconfig/editorconfig-vim' " uses editorconfig to inform formatting
 Plug 'mattn/emmet-vim' " provides snippets, MAY DELETE IF ULTISNIPS IS JUST BETTER
-Plug 'sirver/ultisnips' " may replace emmet
+" Plug 'sirver/ultisnips' " may replace emmet
 Plug 'w0rp/ale' " asynchronous linting engine or something
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
 Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
@@ -66,6 +66,7 @@ set shortmess+=c
 " mapping spacebar to leader
 nnoremap <SPACE> <Nop>
 let mapleader = " "
+nnoremap Y y$
 
 " Fast saving
 nmap <leader>w :w<cr>
@@ -365,6 +366,10 @@ let g:vimtex_quickfix_latexlog = {
 " -----------------------------------------------------------------------------
 " Utilisnips setup
 " -----------------------------------------------------------------------------
-let g:UltiSnipsExpandTrigger = '<tab>'
-let g:UltiSnipsJumpForwardTrigger = '<tab>'
-let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" let g:UltiSnipsExpandTrigger = '<tab>'
+" let g:UltiSnipsJumpForwardTrigger = '<tab>'
+" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+" unlet g:UltiSnipsExpandTrigger
+" unlet g:UltiSnipsJumpForwardTrigger
+" unlet g:UltiSnipsJumpBackwardTrigger
+"
