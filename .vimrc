@@ -31,6 +31,7 @@ call plug#end()
 " -----------------------------------------------------------------------------
 " GENERAL VIM STUFF
 " -----------------------------------------------------------------------------
+set guifont=Monaco:h12
 syntax on
 set number relativenumber " interfaces with our plugin for toggling
 set encoding=utf8
@@ -93,6 +94,12 @@ set undodir=~/.vim/undo//
 " Some servers have issues with backup files, see #649.
 " set nobackup
 " set nowritebackup
+"
+"-- FOLDING --
+set foldmethod=syntax "syntax highlighting items specify folds
+set foldcolumn=1 "defines 1 col at window left, to indicate folding
+let javaScript_fold=1 "activate folding by JS syntax
+set foldlevelstart=99 "start file with all folds opened
 
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
@@ -121,15 +128,20 @@ map <C-f> :Ag
 " some fix for lightline? well p sure this just makes the status bar taller
 set laststatus=2
 
+" -----------------------------------------------------------------------------
+" ALE SETUP
+" -----------------------------------------------------------------------------
 " ALE linting fixer
 let g:ale_fixers = {'javascript': ['eslint']} " add more linters later
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
 " keep lint gutter open
 let g:ale_sign_column_always = 1
-
-" enable icons?
-" let g:webdevicons_enable = 1
+" cooler gutter signs??
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '⚠'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 
 " -----------------------------------------------------------------------------
@@ -373,3 +385,8 @@ let g:vimtex_quickfix_latexlog = {
 " unlet g:UltiSnipsJumpForwardTrigger
 " unlet g:UltiSnipsJumpBackwardTrigger
 "
+
+" -----------------------------------------------------------------------------
+" emmet setup
+" -----------------------------------------------------------------------------
+let g:user_emmet_leader_key=','
