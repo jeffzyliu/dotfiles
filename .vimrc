@@ -18,7 +18,7 @@ Plug 'w0rp/ale' " asynchronous linting engine or something
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
 Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
 Plug 'terryma/vim-multiple-cursors' " control-n to do multicursor work 
-Plug 'luochen1990/rainbow' " unused ATM since js conflict but is rainbow brackets
+" Plug 'luochen1990/rainbow' " unused ATM since js conflict but is rainbow brackets
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " COC autocomplete engine
 Plug 'sheerun/vim-polyglot' " auto-includes various language syntax highlighters
 Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
@@ -77,6 +77,8 @@ nmap <leader>q :q<cr>
 " config by filetype ??
 filetype plugin indent on
 autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab " configure js to have 2 space indents
+autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab " configure html to have 2 space indents
+autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab " configure html to have 2 space indents
 
 " / search tools
 set incsearch " Highlight searching
@@ -96,10 +98,10 @@ set undodir=~/.vim/undo//
 " set nowritebackup
 "
 "-- FOLDING --
-set foldmethod=syntax "syntax highlighting items specify folds
-set foldcolumn=1 "defines 1 col at window left, to indicate folding
-let javaScript_fold=1 "activate folding by JS syntax
-set foldlevelstart=99 "start file with all folds opened
+" set foldmethod=syntax "syntax highlighting items specify folds
+" set foldcolumn=1 "defines 1 col at window left, to indicate folding
+" let javaScript_fold=1 "activate folding by JS syntax
+" set foldlevelstart=99 "start file with all folds opened
 
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
@@ -129,19 +131,33 @@ map <C-f> :Ag
 set laststatus=2
 
 " -----------------------------------------------------------------------------
+" FUGITIVE SETUP
+" -----------------------------------------------------------------------------
+nmap <leader>gh :diffget //3<CR>
+nmap <leader>gh :diffget //2<CR>
+nmap <leader>gs :G<CR>
+
+" -----------------------------------------------------------------------------
 " ALE SETUP
 " -----------------------------------------------------------------------------
 " ALE linting fixer
-let g:ale_fixers = {'javascript': ['eslint']} " add more linters later
+let g:ale_fixers =
+            \{
+                \'javascript': ['eslint'],
+                \'html': ['prettier'],
+                \'css': ['prettier']
+            \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
 " keep lint gutter open
 let g:ale_sign_column_always = 1
 " cooler gutter signs??
 let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
+" let g:ale_sign_warning = '⚠'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+
+map <leader>at :ALEToggle<CR>
 
 
 " -----------------------------------------------------------------------------
@@ -308,73 +324,73 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " -----------------------------------------------------------------------------
 "  VIMTEX OPTIONS
 "  ----------------------------------------------------------------------------
-if has('unix')
-    if has('mac')
-        let g:vimtex_view_method = "skim"
-        let g:vimtex_view_general_viewer
-                \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
-        let g:vimtex_view_general_options = '-r @line @pdf @tex'
-
-        " This adds a callback hook that updates Skim after compilation
-        let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
-        function! UpdateSkim(status)
-            if !a:status | return | endif
-
-            let l:out = b:vimtex.out()
-            let l:tex = expand('%:p')
-            let l:cmd = [g:vimtex_view_general_viewer, '-r']
-            if !empty(system('pgrep Skim'))
-            call extend(l:cmd, ['-g'])
-            endif
-            if has('nvim')
-            call jobstart(l:cmd + [line('.'), l:out, l:tex])
-            elseif has('job')
-            call job_start(l:cmd + [line('.'), l:out, l:tex])
-            else
-            call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
-            endif
-        endfunction
-    else
-        let g:latex_view_general_viewer = "zathura"
-        let g:vimtex_view_method = "zathura"
-    endif
-elseif has('win32')
-
-endif
-
-let g:tex_flavor = "latex"
-let g:vimtex_quickfix_open_on_warning = 0
-let g:vimtex_quickfix_mode = 2
-if has('nvim')
-    let g:vimtex_compiler_progname = 'nvr'
-endif
-let g:vimtex_quickfix_mode=0
-set conceallevel=1 " set to 0 if hidden stuff gets confusing
-let g:tex_conceal='abdmg' 
-
-" Can hide specifc warning messages from the quickfix window
-" Quickfix with Neovim is broken or something
-" https://github.com/lervag/vimtex/issues/773
-let g:vimtex_quickfix_latexlog = {
-            \ 'default' : 1,
-            \ 'fix_paths' : 0,
-            \ 'general' : 1,
-            \ 'references' : 1,
-            \ 'overfull' : 1,
-            \ 'underfull' : 1,
-            \ 'font' : 1,
-            \ 'packages' : {
-            \   'default' : 1,
-            \   'natbib' : 1,
-            \   'biblatex' : 1,
-            \   'babel' : 1,
-            \   'hyperref' : 1,
-            \   'scrreprt' : 1,
-            \   'fixltx2e' : 1,
-            \   'titlesec' : 1,
-            \ },
-            \}
-
+" if has('unix')
+"     if has('mac')
+"         let g:vimtex_view_method = "skim"
+"         let g:vimtex_view_general_viewer
+"                 \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+"         let g:vimtex_view_general_options = '-r @line @pdf @tex'
+"
+"         " This adds a callback hook that updates Skim after compilation
+"         let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+"         function! UpdateSkim(status)
+"             if !a:status | return | endif
+"
+"             let l:out = b:vimtex.out()
+"             let l:tex = expand('%:p')
+"             let l:cmd = [g:vimtex_view_general_viewer, '-r']
+"             if !empty(system('pgrep Skim'))
+"             call extend(l:cmd, ['-g'])
+"             endif
+"             if has('nvim')
+"             call jobstart(l:cmd + [line('.'), l:out, l:tex])
+"             elseif has('job')
+"             call job_start(l:cmd + [line('.'), l:out, l:tex])
+"             else
+"             call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+"             endif
+"         endfunction
+"     else
+"         let g:latex_view_general_viewer = "zathura"
+"         let g:vimtex_view_method = "zathura"
+"     endif
+" elseif has('win32')
+"
+" endif
+"
+" let g:tex_flavor = "latex"
+" let g:vimtex_quickfix_open_on_warning = 0
+" let g:vimtex_quickfix_mode = 2
+" if has('nvim')
+"     let g:vimtex_compiler_progname = 'nvr'
+" endif
+" let g:vimtex_quickfix_mode=0
+" set conceallevel=1 " set to 0 if hidden stuff gets confusing
+" let g:tex_conceal='abdmg' 
+"
+" " Can hide specifc warning messages from the quickfix window
+" " Quickfix with Neovim is broken or something
+" " https://github.com/lervag/vimtex/issues/773
+" let g:vimtex_quickfix_latexlog = {
+"             \ 'default' : 1,
+"             \ 'fix_paths' : 0,
+"             \ 'general' : 1,
+"             \ 'references' : 1,
+"             \ 'overfull' : 1,
+"             \ 'underfull' : 1,
+"             \ 'font' : 1,
+"             \ 'packages' : {
+"             \   'default' : 1,
+"             \   'natbib' : 1,
+"             \   'biblatex' : 1,
+"             \   'babel' : 1,
+"             \   'hyperref' : 1,
+"             \   'scrreprt' : 1,
+"             \   'fixltx2e' : 1,
+"             \   'titlesec' : 1,
+"             \ },
+"             \}
+"
 " -----------------------------------------------------------------------------
 " Utilisnips setup
 " -----------------------------------------------------------------------------
