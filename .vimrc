@@ -24,6 +24,7 @@ Plug 'sheerun/vim-polyglot' " auto-includes various language syntax highlighters
 Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
 Plug 'tomtom/tcomment_vim' " gives the gcc and gc commands to toggle comment
 Plug 'lervag/vimtex' " latex helper
+Plug 'mlaursen/vim-react-snippets' " gives a lot of js and jsx snippets for react
 
 call plug#end()
 
@@ -77,8 +78,10 @@ nmap <leader>q :q<cr>
 " config by filetype ??
 filetype plugin indent on
 autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab " configure js to have 2 space indents
-autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab " configure html to have 2 space indents
-autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab " configure html to have 2 space indents
+autocmd FileType javascriptreact setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " / search tools
 set incsearch " Highlight searching
@@ -133,7 +136,7 @@ set laststatus=2
 " -----------------------------------------------------------------------------
 " FUGITIVE SETUP
 " -----------------------------------------------------------------------------
-nmap <leader>gh :diffget //3<CR>
+nmap <leader>gl :diffget //3<CR>
 nmap <leader>gh :diffget //2<CR>
 nmap <leader>gs :G<CR>
 
@@ -141,11 +144,22 @@ nmap <leader>gs :G<CR>
 " ALE SETUP
 " -----------------------------------------------------------------------------
 " ALE linting fixer
+let g:ale_linters = 
+            \{
+                \'javascript': ['eslint'],
+                \'css': ['stylelint'],
+                \'html': ['htmlhint'],
+                \'cpp': ['clang'],
+                \'c': ['clang']
+            \}
+let g:ale_linters_explicit = 1
 let g:ale_fixers =
             \{
                 \'javascript': ['eslint'],
                 \'html': ['prettier'],
-                \'css': ['prettier']
+                \'css': ['stylelint'],
+                \'cpp': ['clang-format'],
+                \'c': ['clang-format']
             \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
@@ -153,7 +167,7 @@ nmap <leader>f :ALEFix<cr>
 let g:ale_sign_column_always = 1
 " cooler gutter signs??
 let g:ale_sign_error = '✘'
-" let g:ale_sign_warning = '⚠'
+let g:ale_sign_warning = '>>'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
@@ -394,15 +408,20 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " -----------------------------------------------------------------------------
 " Utilisnips setup
 " -----------------------------------------------------------------------------
-" let g:UltiSnipsExpandTrigger = '<tab>'
-" let g:UltiSnipsJumpForwardTrigger = '<tab>'
-" let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsExpandTrigger = '<C-l>'
+let g:UltiSnipsJumpForwardTrigger = '<C-l>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
 " unlet g:UltiSnipsExpandTrigger
 " unlet g:UltiSnipsJumpForwardTrigger
 " unlet g:UltiSnipsJumpBackwardTrigger
-"
+
 
 " -----------------------------------------------------------------------------
 " emmet setup
 " -----------------------------------------------------------------------------
 let g:user_emmet_leader_key=','
+let g:user_emmet_settings = {
+  \  'javascript.jsx' : {
+    \      'extends' : 'jsx',
+    \  },
+  \}
