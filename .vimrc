@@ -48,6 +48,7 @@ call plug#end()
 " -----------------------------------------------------------------------------
 set guifont=Monaco:h12
 syntax on
+set nocompatible
 set number relativenumber " interfaces with our plugin for toggling
 set encoding=utf8
 set clipboard=unnamed " set yank to system keyboard
@@ -83,6 +84,8 @@ set shortmess+=c
 nnoremap <SPACE> <Nop>
 let mapleader = " "
 nnoremap Y y$
+nnoremap H ^
+nnoremap L $
 
 " Fast saving
 nmap <leader>w :w<cr>
@@ -189,12 +192,14 @@ let g:lightline.component_function = {
 let g:lightline.active = { 
         \ 'left': [ [ 'mode', 'paste' ],
         \           [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-        \           [ 'cocstatus', 'currentfunction' ] ]
+        \           [ 'cocstatus', 'currentfunction' ] ] 
         \ ,
         \ 'right': [ [ 'lineinfo' ],
         \            [ 'percent' ],
         \            [ 'fileformat', 'fileencoding', 'filetype' ],
-        \            [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ] }
+        \            [ 'linter_checking', 'linter_errors', 'linter_warnings',
+        \ 'linter_infos', 'linter_ok' ]
+        \            ] }
 
 
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
@@ -235,7 +240,7 @@ nmap <leader>f :ALEFix<cr>
 let g:ale_sign_column_always = 1
 " cooler gutter signs??
 let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '>>'
+let g:ale_sign_warning = '●'
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
@@ -354,6 +359,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 highlight CocHighlightText ctermbg=242 guibg=#343F4C
 highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+" highlight link CocErrorLine CocErrorSign 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
