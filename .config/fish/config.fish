@@ -28,3 +28,4 @@ abbr --add --global mkdir mkdir -p
 
 starship init fish | source
 fnm env --multi | source
+source $HOME/.cargo/env

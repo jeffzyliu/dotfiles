@@ -1,3 +1,13 @@
+function! BuildComposer(info)
+  if a:info.status != 'unchanged' || a:info.force
+    if has('nvim')
+      !cargo build --release --locked
+    else
+      !cargo build --release --locked --no-default-features --features json-rpc
+    endif
+  endif
+endfunction
+
 " -----------------------------------------------------------------------------
 " VIM PLUG PLUGIN DEFINITIONS
 " -----------------------------------------------------------------------------
@@ -7,13 +17,14 @@ Plug 'ayu-theme/ayu-vim' " ayu mirage color scheme
 Plug 'jeffkreeftmeijer/vim-numbertoggle' " tiny script to toggle line numbers
 Plug 'preservim/nerdtree' " file browser
 Plug 'itchyny/lightline.vim' " powerline-like status line
+Plug 'maximbaz/lightline-ale' " add ale to lightline
 Plug 'tpope/vim-eunuch' " convenient commands that I don't use yet
 Plug 'tpope/vim-surround' " helps change surrounding brackets/parens/quotes together
 Plug 'airblade/vim-gitgutter' " shows which lines diff in git
 Plug 'tpope/vim-fugitive' " gives tons of git power, e.g. blame by line
 Plug 'editorconfig/editorconfig-vim' " uses editorconfig to inform formatting
 Plug 'mattn/emmet-vim' " provides snippets, MAY DELETE IF ULTISNIPS IS JUST BETTER
-" Plug 'sirver/ultisnips' " may replace emmet
+Plug 'sirver/ultisnips' " may replace emmet
 Plug 'w0rp/ale' " asynchronous linting engine or something
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
 Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
@@ -25,6 +36,9 @@ Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
 Plug 'tomtom/tcomment_vim' " gives the gcc and gc commands to toggle comment
 Plug 'lervag/vimtex' " latex helper
 Plug 'mlaursen/vim-react-snippets' " gives a lot of js and jsx snippets for react
+Plug 'easymotion/vim-easymotion' " wow cheating to move around easier
+" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') } " instant markdown rendering
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " simpler markdown?
 
 call plug#end()
 
@@ -82,6 +96,7 @@ autocmd FileType javascriptreact setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
 autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType scss setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " / search tools
 set incsearch " Highlight searching
@@ -106,6 +121,14 @@ set undodir=~/.vim/undo//
 " let javaScript_fold=1 "activate folding by JS syntax
 " set foldlevelstart=99 "start file with all folds opened
 
+" Don't dispay mode in command line (lightline already shows it)
+set noshowmode
+
+" Delete current visual selection and dump in black hole buffer before pasting
+" Used when you want to paste over something without it getting copied to
+" Vim's default buffer
+vnoremap <leader>p "_dP
+
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
@@ -116,10 +139,14 @@ let ayucolor="mirage"
 colorscheme ayu
 
 " rainbow brackets off bc js syn highlighting hates it
-let g:rainbow_active = 0
+" let g:rainbow_active = 0
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
+
+" React jsx highlights on
+let g:vim_jsx_pretty_highlight_close_tag = 1
+let g:vim_jsx_pretty_colorful_config = 1 " uhh colors?? 
 
 " map gitgutter refresh to leader-g
 nmap <leader>g :GitGutter<cr>
@@ -130,8 +157,41 @@ set signcolumn="yes"
 map <C-p> :Files 
 " Map ag to control-f
 map <C-f> :Ag 
+
+" -----------------------------------------------------------------------------
+" LIGHTLINE SETUP
+" -----------------------------------------------------------------------------
 " some fix for lightline? well p sure this just makes the status bar taller
 set laststatus=2
+let g:lightline = {}
+
+let g:lightline.component_function = { 'gitbranch': 'FugitiveHead' }
+
+let g:lightline.component_expand = {
+    \  'linter_checking': 'lightline#ale#checking',
+    \  'linter_infos': 'lightline#ale#infos',
+    \  'linter_warnings': 'lightline#ale#warnings',
+    \  'linter_errors': 'lightline#ale#errors',
+    \  'linter_ok': 'lightline#ale#ok',
+    \ }
+
+let g:lightline.component_type = {
+    \     'linter_checking': 'right',
+    \     'linter_infos': 'right',
+    \     'linter_warnings': 'warning',
+    \     'linter_errors': 'error',
+    \     'linter_ok': 'right',
+    \ }
+
+let g:lightline.active = { 
+        \ 'left': [ [ 'mode', 'paste' ],
+        \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+        \ ,
+        \ 'right': [ [ 'lineinfo' ],
+        \            [ 'percent' ],
+        \            [ 'fileformat', 'fileencoding', 'filetype' ],
+        \            ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ] }
+
 
 " -----------------------------------------------------------------------------
 " FUGITIVE SETUP
@@ -144,23 +204,24 @@ nmap <leader>gs :G<CR>
 " ALE SETUP
 " -----------------------------------------------------------------------------
 " ALE linting fixer
+            " \'javascript': ['eslint'],
+
 let g:ale_linters = 
-            \{
-                \'javascript': ['eslint'],
-                \'css': ['stylelint'],
-                \'html': ['htmlhint'],
-                \'cpp': ['clang'],
-                \'c': ['clang']
-            \}
+        \{
+            \'css': ['stylelint'],
+            \'html': ['htmlhint'],
+            \'cpp': ['clang'],
+            \'c': ['clang']
+        \}
 let g:ale_linters_explicit = 1
 let g:ale_fixers =
-            \{
-                \'javascript': ['eslint'],
-                \'html': ['prettier'],
-                \'css': ['stylelint'],
-                \'cpp': ['clang-format'],
-                \'c': ['clang-format']
-            \} 
+        \{
+            \'javascript': ['eslint'],
+            \'html': ['prettier'],
+            \'css': ['stylelint'],
+            \'cpp': ['clang-format'],
+            \'c': ['clang-format']
+        \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
 " keep lint gutter open
@@ -173,6 +234,50 @@ highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 map <leader>at :ALEToggle<CR>
 
+" jump between errors
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+" quickfixing
+let g:ale_set_quickfix = 1
+
+let g:ale_open_list = 0
+
+" custom error message
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
+
+" fix ugly highlights (only underline on error)
+" #881b45
+" #6a1536
+" #8a1919
+" #832121
+" #7b2828
+" #792039
+" #792020
+" #8d2525
+" #9d2a2a
+" #973030
+" #D76C75
+" #9b1c1c
+" #ae0a0a
+" #964848
+" #803d3d
+" #853131
+" #960000
+" #8a1515
+" #b01919
+" #993711
+" #b58707
+" #ad1563
+" #7d0744
+highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+
+" guibg=#343F4C
+" #398E89
+" highlight ALEWarning term=underline cterm=underline gui=undercurl
+highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 " -----------------------------------------------------------------------------
 " NerdTree Config
@@ -191,8 +296,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " let nerdtree highlight files differently depending on extension
 " NERDTree File highlighting
 function! NERDTreeHighlightFile(extension, fg, guifg)
- exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
- exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
 call NERDTreeHighlightFile('c', 'green', 'green') 
@@ -210,6 +315,9 @@ call NERDTreeHighlightFile('coffee', 'Red', 'red')
 call NERDTreeHighlightFile('js', 'Red', '#ffa500')
 call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
 
+let g:NERDTreeShowHidden = 1
+" Hide certain files and directories from NERDTree
+let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
 
 " -----------------------------------------------------------------------------
 " COC autocomplete engine setup
@@ -219,14 +327,14 @@ call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -236,9 +344,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
 if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 " Use `[g` and `]g` to navigate diagnostics
@@ -256,30 +364,31 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+if (index(['vim','help'], &filetype) >= 0)
+execute 'vert bo h '.expand('<cword>')
+else
+call CocActionAsync('doHover')
+endif
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
+highlight CocHighlightText ctermbg=242 guibg=#343F4C
+highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code. (currently conflicts with ALEFix so disabled)
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>fo  <Plug>(coc-format-selected)
+nmap <leader>fo  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder.
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -421,7 +530,13 @@ let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
 " -----------------------------------------------------------------------------
 let g:user_emmet_leader_key=','
 let g:user_emmet_settings = {
-  \  'javascript.jsx' : {
-    \      'extends' : 'jsx',
-    \  },
-  \}
+\  'javascript.jsx' : {
+\      'extends' : 'jsx',
+\  },
+\}
+
+
+" -----------------------------------------------------------------------------
+" markdown setup
+" -----------------------------------------------------------------------------
+

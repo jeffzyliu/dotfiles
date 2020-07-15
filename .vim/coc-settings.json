@@ -1,0 +1,14 @@
+{
+  "tsserver.npm": "/usr/local/bin/npm",
+  "eslint.filetypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact",
+    "typescript.tsx"
+  ],
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "●",
+  "diagnostic.infoSign": "●",
+  "diagnostic.messageTarget": "echo"
+}
