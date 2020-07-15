@@ -22,7 +22,6 @@ prompt_order = [
     "ruby",
     "rust",
     "conda",
-    "memory_usage",
     "aws",
     "env_var",
     "cmd_duration",
@@ -41,7 +40,6 @@ show_milliseconds = true
 style = "bold cyan"
 
 [git_status]
-#modified = "🖍️ "
 modified_count.enabled = true
 modified_count.style = "bold purple"
 conflicted_count.enabled = true
@@ -50,18 +48,13 @@ stashed_count.enabled = true
 stashed_count.style = "bold blue"
 deleted_count.enabled = true
 deleted_count.style = "white"
-#deleted = "❌"
 show_sync_count = true
-#show_sync_count.style = "magenta"
 untracked_count.enabled = true
 untracked_count.style = "green"
-#untracked = "❓"
+renamed_count.enabled = true
+renamed_count.style = "bold cyan"
 staged_count.enabled = true
 staged_count.style = "cyan"
-
-[memory_usage]
-disabled = false
-threshold = 85
 
 [time]
 disabled = false

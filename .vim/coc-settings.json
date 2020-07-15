@@ -10,5 +10,6 @@
   "diagnostic.errorSign": "✘",
   "diagnostic.warningSign": "●",
   "diagnostic.infoSign": "●",
-  "diagnostic.messageTarget": "echo"
+  "diagnostic.messageTarget": "echo",
+  "coc.preferences.currentFunctionSymbolAutoUpdate": true
 }

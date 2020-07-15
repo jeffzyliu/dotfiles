@@ -91,12 +91,8 @@ nmap <leader>q :q<cr>
 
 " config by filetype ??
 filetype plugin indent on
-autocmd FileType javascript setlocal shiftwidth=2 softtabstop=2 expandtab " configure js to have 2 space indents
-autocmd FileType javascriptreact setlocal shiftwidth=2 softtabstop=2 expandtab
-autocmd FileType json setlocal shiftwidth=2 softtabstop=2 expandtab
-autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
-autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
-autocmd FileType scss setlocal shiftwidth=2 softtabstop=2 expandtab
+" configure all these to have 2 space indents
+autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
 
 " / search tools
 set incsearch " Highlight searching
@@ -114,11 +110,11 @@ set undodir=~/.vim/undo//
 " Some servers have issues with backup files, see #649.
 " set nobackup
 " set nowritebackup
-"
-"-- FOLDING --
-" set foldmethod=syntax "syntax highlighting items specify folds
+
+" -- FOLDING --
+" set foldmethod=indent "syntax highlighting items specify folds
 " set foldcolumn=1 "defines 1 col at window left, to indicate folding
-" let javaScript_fold=1 "activate folding by JS syntax
+" " let javaScript_fold=1 "activate folding by JS syntax
 " set foldlevelstart=99 "start file with all folds opened
 
 " Don't dispay mode in command line (lightline already shows it)
@@ -129,6 +125,7 @@ set noshowmode
 " Vim's default buffer
 vnoremap <leader>p "_dP
 
+set splitright " split vertical windows rightward
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
@@ -150,13 +147,10 @@ let g:vim_jsx_pretty_colorful_config = 1 " uhh colors??
 
 " map gitgutter refresh to leader-g
 nmap <leader>g :GitGutter<cr>
-" keep gitgutter open
-set signcolumn="yes"
 
-" Map Files to control-p
-map <C-p> :Files 
-" Map ag to control-f
-map <C-f> :Ag 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
 
 " -----------------------------------------------------------------------------
 " LIGHTLINE SETUP
@@ -183,15 +177,27 @@ let g:lightline.component_type = {
     \     'linter_ok': 'right',
     \ }
 
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
+let g:lightline.component_function = {
+        \ 'cocstatus': 'coc#status',
+        \ 'currentfunction': 'CocCurrentFunction'
+        \ }
+
 let g:lightline.active = { 
         \ 'left': [ [ 'mode', 'paste' ],
-        \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+        \           [ 'gitbranch', 'readonly', 'filename', 'modified' ],
+        \           [ 'cocstatus', 'currentfunction' ] ]
         \ ,
         \ 'right': [ [ 'lineinfo' ],
         \            [ 'percent' ],
         \            [ 'fileformat', 'fileencoding', 'filetype' ],
-        \            ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ] }
+        \            [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ] }
 
+
+autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " -----------------------------------------------------------------------------
 " FUGITIVE SETUP
@@ -199,6 +205,7 @@ let g:lightline.active = {
 nmap <leader>gl :diffget //3<CR>
 nmap <leader>gh :diffget //2<CR>
 nmap <leader>gs :G<CR>
+nmap <leader>gm :Gdiffsplit!<CR>
 
 " -----------------------------------------------------------------------------
 " ALE SETUP
@@ -240,7 +247,6 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " quickfixing
 let g:ale_set_quickfix = 1
-
 let g:ale_open_list = 0
 
 " custom error message
@@ -248,35 +254,8 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
 
-" fix ugly highlights (only underline on error)
-" #881b45
-" #6a1536
-" #8a1919
-" #832121
-" #7b2828
-" #792039
-" #792020
-" #8d2525
-" #9d2a2a
-" #973030
-" #D76C75
-" #9b1c1c
-" #ae0a0a
-" #964848
-" #803d3d
-" #853131
-" #960000
-" #8a1515
-" #b01919
-" #993711
-" #b58707
-" #ad1563
-" #7d0744
+" fix ugly highlights
 highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
-
-" guibg=#343F4C
-" #398E89
-" highlight ALEWarning term=underline cterm=underline gui=undercurl
 highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 " -----------------------------------------------------------------------------
@@ -365,7 +344,7 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
 if (index(['vim','help'], &filetype) >= 0)
-execute 'vert bo h '.expand('<cword>')
+execute 'vert h '.expand('<cword>')
 else
 call CocActionAsync('doHover')
 endif
