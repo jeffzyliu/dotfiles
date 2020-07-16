@@ -14,7 +14,7 @@ endfunction
 call plug#begin('~/.vim/plugged')
 
 Plug 'ayu-theme/ayu-vim' " ayu mirage color scheme
-Plug 'jeffkreeftmeijer/vim-numbertoggle' " tiny script to toggle line numbers
+" Plug 'jeffkreeftmeijer/vim-numbertoggle' " tiny script to toggle line numbers
 Plug 'preservim/nerdtree' " file browser
 Plug 'itchyny/lightline.vim' " powerline-like status line
 Plug 'maximbaz/lightline-ale' " add ale to lightline
@@ -47,9 +47,10 @@ call plug#end()
 " GENERAL VIM STUFF
 " -----------------------------------------------------------------------------
 set guifont=Monaco:h12
+set guicursor+=a:blinkon0
 syntax on
 set nocompatible
-set number relativenumber " interfaces with our plugin for toggling
+set number norelativenumber
 set encoding=utf8
 set clipboard=unnamed " set yank to system keyboard
 set autoindent " always set autoindenting on
@@ -66,7 +67,7 @@ set softtabstop=4 " when hitting <BS>, pretend like a tab is removed, even if sp
 set tabstop=4 " tabs are n spaces
 set mouse+=a " make system mouse work
 set nomodeline " should not be useful anymore but eh
-set history=1000 " expands undo hisory
+set history=400 " expands undo hisory
 set lazyredraw " might marginally increase performance
 set scrolloff=1 " keeps a line of margin at boom
 set backspace=indent,eol,start " supposed to make backspace bettter
@@ -78,6 +79,8 @@ set cmdheight=2 " Give more space for displaying messages.
 set updatetime=300
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
+" smaller number gutter
+set numberwidth=3
 
 " KEYBIND SETUP
 " mapping spacebar to leader
@@ -86,16 +89,20 @@ let mapleader = " "
 nnoremap Y y$
 nnoremap H ^
 nnoremap L $
+nmap <leader>n :set relativenumber!<cr>
 
 " Fast saving
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
-" quit shortcut is suspiciously slow
+" need to press enter after that for speed
 
 " config by filetype ??
 filetype plugin indent on
 " configure all these to have 2 space indents
 autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
+" spellcheck markdown files
+autocmd FileType markdown setlocal spell
+let g:jsx_ext_required = 0 
 
 " / search tools
 set incsearch " Highlight searching
@@ -107,6 +114,7 @@ set autoread " autoread files
 
 " disable swps in current dir and moves backups there ttoo
 set backup
+set undofile
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
@@ -114,7 +122,7 @@ set undodir=~/.vim/undo//
 " set nobackup
 " set nowritebackup
 
-" -- FOLDING --
+" -- FOLDING -- (disabled since this is slow)
 " set foldmethod=indent "syntax highlighting items specify folds
 " set foldcolumn=1 "defines 1 col at window left, to indicate folding
 " " let javaScript_fold=1 "activate folding by JS syntax
@@ -129,6 +137,9 @@ set noshowmode
 vnoremap <leader>p "_dP
 
 set splitright " split vertical windows rightward
+
+nmap <leader>t :term<cr>
+
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
@@ -143,6 +154,10 @@ colorscheme ayu
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
+" colors
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#373C47   
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#4B4F59  
 
 " React jsx highlights on
 let g:vim_jsx_pretty_highlight_close_tag = 1
@@ -150,6 +165,11 @@ let g:vim_jsx_pretty_colorful_config = 1 " uhh colors??
 
 " map gitgutter refresh to leader-g
 nmap <leader>g :GitGutter<cr>
+
+" Map Files to control-p
+map <C-p> :Files 
+" Map ag to control-f
+map <C-f> :Ag 
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
@@ -297,6 +317,7 @@ call NERDTreeHighlightFile('styl', 'cyan', 'cyan')
 call NERDTreeHighlightFile('css', 'cyan', 'cyan')
 call NERDTreeHighlightFile('coffee', 'Red', 'red')
 call NERDTreeHighlightFile('js', 'Red', '#ffa500')
+call NERDTreeHighlightFile('jsx', 'Red', '#ffa500')
 call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
 
 let g:NERDTreeShowHidden = 1
@@ -358,7 +379,7 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 highlight CocHighlightText ctermbg=242 guibg=#343F4C
-highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
 " highlight link CocErrorLine CocErrorSign 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
