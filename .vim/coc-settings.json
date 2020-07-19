@@ -15,5 +15,5 @@
   "diagnostic.format": "[%source] %message [%severity]",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-  "diagnostic.checkCurrentLine": true
+  "prettier.eslintIntegration": true
 }

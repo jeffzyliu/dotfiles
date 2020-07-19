@@ -168,12 +168,18 @@ nmap <leader>g :GitGutter<cr>
 
 " Map Files to control-p
 map <C-p> :Files 
-" Map ag to control-f
-map <C-f> :Ag 
+" Map rg to control-f
+map <C-f> :Rg
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 set signcolumn=yes
+
+" slow down refresh of markdown display server so insert mode isn't so laggy
+" refreshes upon normal mode, no recent keypresses, or save file
+let g:instant_markdown_slow = 1
+" enables mathjax!
+let g:instant_markdown_mathjax = 1
 
 " -----------------------------------------------------------------------------
 " LIGHTLINE SETUP
@@ -181,8 +187,6 @@ set signcolumn=yes
 " some fix for lightline? well p sure this just makes the status bar taller
 set laststatus=2
 let g:lightline = {}
-
-let g:lightline.component_function = { 'gitbranch': 'FugitiveHead' }
 
 let g:lightline.component_expand = {
     \  'linter_checking': 'lightline#ale#checking',
@@ -200,18 +204,19 @@ let g:lightline.component_type = {
     \     'linter_ok': 'right',
     \ }
 
-function! CocCurrentFunction()
-    return get(b:, 'coc_current_function', '')
-endfunction
-
 let g:lightline.component_function = {
+        \ 'gitbranch': 'FugitiveHead',
         \ 'cocstatus': 'coc#status',
-        \ 'currentfunction': 'CocCurrentFunction'
+        \ 'currentfunction': 'CocCurrentFunction',
+        \ 'fileformat': 'LightlineFileformat',
+        \ 'fileencoding': 'LightlineFileEncoding',
+        \ 'filename': 'LightlineFilename',
+        \ 'filetype': 'LightlineFiletype',
         \ }
 
 let g:lightline.active = { 
         \ 'left': [ [ 'mode', 'paste' ],
-        \           [ 'gitbranch', 'readonly', 'filename', 'modified' ],
+        \           [ 'gitbranch', 'readonly', 'filename' ],
         \           [ 'cocstatus', 'currentfunction' ] ] 
         \ ,
         \ 'right': [ [ 'lineinfo' ],
@@ -221,6 +226,31 @@ let g:lightline.active = {
         \ 'linter_infos', 'linter_ok' ]
         \            ] }
 
+function! LightlineFileformat()
+  return winwidth(0) > 110 ? &fileformat : ''
+endfunction
+
+function! LightlineFileEncoding()
+  return winwidth(0) > 110 ? &fileencoding : ''
+endfunction
+
+function! LightlineFilename()
+  let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+  let modified = &modified ? ' +' : ''
+  return filename . modified
+endfunction
+
+function! CocCurrentFunction()
+    return winwidth(0) > 90 ? get(b:, 'coc_current_function', '') : ''
+endfunction
+
+" function! LightlineFiletype()
+"   return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+" endfunction
+
+function! LightlineFiletype()
+  return winwidth(0) > 40 ? (&filetype !=# '' ? (&filetype !=# 'javascriptreact' ? &filetype : 'react.jsx') : 'no ft') : ''
+endfunction
 
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
@@ -241,6 +271,7 @@ nmap <leader>gm :Gdiffsplit!<CR>
 let g:ale_linters = 
         \{
             \'css': ['stylelint'],
+            \'scss': ['stylelint'],
             \'html': ['htmlhint'],
             \'cpp': ['clang'],
             \'c': ['clang']
@@ -249,8 +280,10 @@ let g:ale_linters_explicit = 1
 let g:ale_fixers =
         \{
             \'javascript': ['eslint'],
+            \'javascriptreact': ['eslint'],
             \'html': ['prettier'],
             \'css': ['stylelint'],
+            \'scss': ['stylelint'],
             \'cpp': ['clang-format'],
             \'c': ['clang-format']
         \} 
@@ -261,8 +294,11 @@ let g:ale_sign_column_always = 1
 " cooler gutter signs??
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '●'
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+highlight ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
+" fix ugly highlights
+highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 map <leader>at :ALEToggle<CR>
 
@@ -278,10 +314,6 @@ let g:ale_open_list = 0
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
-
-" fix ugly highlights
-highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
-highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 " -----------------------------------------------------------------------------
 " NerdTree Config

@@ -26,6 +26,10 @@ abbr --add --global cp cp -i
 abbr --add --global mv mv -i
 abbr --add --global mkdir mkdir -p
 
+set -gx FZF_DEFAULT_COMMAND  'rg --files --no-ignore-vcs --hidden -g "!.git"'
+# set -gx FZF_DEFAULT_COMMAND 'ag -u --ignore-dir .git -g ""'
+# set -gx FZF_DEFAULT_COMMAND
+
 starship init fish | source
 fnm env --multi | source
 source $HOME/.cargo/env
