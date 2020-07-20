@@ -1,12 +1,13 @@
-function! BuildComposer(info)
-  if a:info.status != 'unchanged' || a:info.force
-    if has('nvim')
-      !cargo build --release --locked
-    else
-      !cargo build --release --locked --no-default-features --features json-rpc
-    endif
-  endif
-endfunction
+" deprecated function for installing a rust plugin
+" function! BuildComposer(info)
+"   if a:info.status != 'unchanged' || a:info.force
+"     if has('nvim')
+"       !cargo build --release --locked
+"     else
+"       !cargo build --release --locked --no-default-features --features json-rpc
+"     endif
+"   endif
+" endfunction
 
 " -----------------------------------------------------------------------------
 " VIM PLUG PLUGIN DEFINITIONS
@@ -14,7 +15,6 @@ endfunction
 call plug#begin('~/.vim/plugged')
 
 Plug 'ayu-theme/ayu-vim' " ayu mirage color scheme
-" Plug 'jeffkreeftmeijer/vim-numbertoggle' " tiny script to toggle line numbers
 Plug 'preservim/nerdtree' " file browser
 Plug 'itchyny/lightline.vim' " powerline-like status line
 Plug 'maximbaz/lightline-ale' " add ale to lightline
@@ -29,7 +29,6 @@ Plug 'w0rp/ale' " asynchronous linting engine or something
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
 Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
 Plug 'terryma/vim-multiple-cursors' " control-n to do multicursor work 
-" Plug 'luochen1990/rainbow' " unused ATM since js conflict but is rainbow brackets
 Plug 'neoclide/coc.nvim', {'branch': 'release'} " COC autocomplete engine
 Plug 'sheerun/vim-polyglot' " auto-includes various language syntax highlighters
 Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
@@ -89,20 +88,22 @@ let mapleader = " "
 nnoremap Y y$
 nnoremap H ^
 nnoremap L $
+" toggle relative line number
 nmap <leader>n :set relativenumber!<cr>
+" refresh syntax highlighting
+nmap <leader>syn :syn sync fromstart<cr>
 
 " Fast saving
 nmap <leader>w :w<cr>
 nmap <leader>q :q<cr>
 " need to press enter after that for speed
 
-" config by filetype ??
+" config by filetype
 filetype plugin indent on
 " configure all these to have 2 space indents
 autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
 " spellcheck markdown files
 autocmd FileType markdown setlocal spell
-let g:jsx_ext_required = 0 
 
 " / search tools
 set incsearch " Highlight searching
@@ -144,13 +145,10 @@ nmap <leader>t :term<cr>
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
 
-" color support for ayu mirage <3
+" color support for ayu mirage
 set termguicolors
 let ayucolor="mirage"
 colorscheme ayu
-
-" rainbow brackets off bc js syn highlighting hates it
-" let g:rainbow_active = 0
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
@@ -162,29 +160,23 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#4B4F59
 " React jsx highlights on
 let g:vim_jsx_pretty_highlight_close_tag = 1
 let g:vim_jsx_pretty_colorful_config = 1 " uhh colors?? 
+let g:jsx_ext_required = 0 
 
 " map gitgutter refresh to leader-g
 nmap <leader>g :GitGutter<cr>
 
 " Map Files to control-p
 map <C-p> :Files 
-" Map rg to control-f
+" Map Rg to control-f
 map <C-f> :Rg
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 set signcolumn=yes
 
-" slow down refresh of markdown display server so insert mode isn't so laggy
-" refreshes upon normal mode, no recent keypresses, or save file
-let g:instant_markdown_slow = 1
-" enables mathjax!
-let g:instant_markdown_mathjax = 1
-
 " -----------------------------------------------------------------------------
 " LIGHTLINE SETUP
 " -----------------------------------------------------------------------------
-" some fix for lightline? well p sure this just makes the status bar taller
 set laststatus=2
 let g:lightline = {}
 
@@ -244,10 +236,6 @@ function! CocCurrentFunction()
     return winwidth(0) > 90 ? get(b:, 'coc_current_function', '') : ''
 endfunction
 
-" function! LightlineFiletype()
-"   return winwidth(0) > 70 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
-" endfunction
-
 function! LightlineFiletype()
   return winwidth(0) > 40 ? (&filetype !=# '' ? (&filetype !=# 'javascriptreact' ? &filetype : 'react.jsx') : 'no ft') : ''
 endfunction
@@ -257,16 +245,18 @@ autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 " -----------------------------------------------------------------------------
 " FUGITIVE SETUP
 " -----------------------------------------------------------------------------
+" grab diff from right side during merge
 nmap <leader>gl :diffget //3<CR>
+" left side
 nmap <leader>gh :diffget //2<CR>
+" open git status
 nmap <leader>gs :G<CR>
+" open merge panes
 nmap <leader>gm :Gdiffsplit!<CR>
 
 " -----------------------------------------------------------------------------
 " ALE SETUP
 " -----------------------------------------------------------------------------
-" ALE linting fixer
-            " \'javascript': ['eslint'],
 
 let g:ale_linters = 
         \{
@@ -332,8 +322,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " let nerdtree highlight files differently depending on extension
 " NERDTree File highlighting
 function! NERDTreeHighlightFile(extension, fg, guifg)
-exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
-exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
 call NERDTreeHighlightFile('c', 'green', 'green') 
@@ -416,7 +406,7 @@ highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none g
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" Formatting selected code. (currently conflicts with ALEFix so disabled)
+" Formatting selected code.
 xmap <leader>fo  <Plug>(coc-format-selected)
 nmap <leader>fo  <Plug>(coc-format-selected)
 
@@ -430,8 +420,9 @@ nmap <leader>fo  <Plug>(coc-format-selected)
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" this freezes vim for some reason
+" xmap <leader>aa  <Plug>(coc-codeaction-selected)
+" nmap <leader>aa  <Plug>(coc-codeaction-selected)
 
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
@@ -465,7 +456,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 
 " Mappings for CoCList
 " Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
@@ -473,7 +464,7 @@ nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
@@ -558,10 +549,6 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 let g:UltiSnipsExpandTrigger = '<C-l>'
 let g:UltiSnipsJumpForwardTrigger = '<C-l>'
 let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
-" unlet g:UltiSnipsExpandTrigger
-" unlet g:UltiSnipsJumpForwardTrigger
-" unlet g:UltiSnipsJumpBackwardTrigger
-
 
 " -----------------------------------------------------------------------------
 " emmet setup
@@ -573,8 +560,12 @@ let g:user_emmet_settings = {
 \  },
 \}
 
-
 " -----------------------------------------------------------------------------
 " markdown setup
 " -----------------------------------------------------------------------------
 
+" slow down refresh of markdown display server so insert mode isn't so laggy
+" refreshes upon normal mode, no recent keypresses, or save file
+let g:instant_markdown_slow = 1
+" enables mathjax!
+let g:instant_markdown_mathjax = 1
