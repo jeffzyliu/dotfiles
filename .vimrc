@@ -38,6 +38,8 @@ Plug 'mlaursen/vim-react-snippets' " gives a lot of js and jsx snippets for reac
 Plug 'easymotion/vim-easymotion' " wow cheating to move around easier
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') } " instant markdown rendering
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " simpler markdown?
+Plug 'machakann/vim-highlightedyank' " highlights yanked text
+Plug 'jiangmiao/auto-pairs' " matches start and end brackets etc
 
 call plug#end()
 
