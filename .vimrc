@@ -39,7 +39,10 @@ Plug 'easymotion/vim-easymotion' " wow cheating to move around easier
 " Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') } " instant markdown rendering
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " simpler markdown?
 Plug 'machakann/vim-highlightedyank' " highlights yanked text
-Plug 'jiangmiao/auto-pairs' " matches start and end brackets etc
+" Plug 'jiangmiao/auto-pairs' " matches start and end brackets etc (actually not desirable rn)
+Plug 'mhinz/vim-startify' " adds an actual start screen
+Plug 'alvan/vim-closetag' " closes xml tags
+Plug 'psliwka/vim-smoothie' " smooth scrolling
 
 call plug#end()
 
@@ -143,6 +146,20 @@ set splitright " split vertical windows rightward
 
 nmap <leader>t :term<cr>
 
+" auto close {
+function! s:CloseBracket()
+    let line = getline('.')
+    if line =~# '^\s*\(struct\|class\|enum\) '
+        return "{\<Enter>};\<Esc>O"
+    elseif searchpair('(', '', ')', 'bmn', '', line('.'))
+        " Probably inside a function call. Close it off.
+        return "{\<Enter>});\<Esc>O"
+    else
+        return "{\<Enter>}\<Esc>O"
+    endif
+endfunction
+inoremap <expr> {<Enter> <SID>CloseBracket()
+
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
@@ -174,7 +191,7 @@ map <C-f> :Rg
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-set signcolumn=yes
+set signcolumn=yes ""
 
 " -----------------------------------------------------------------------------
 " LIGHTLINE SETUP
@@ -314,8 +331,8 @@ let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
 " map nerdtreetoggle
 map <C-o> :NERDTreeToggle<CR>
 " let nerdtree activate upon just "vim"
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " let nerdtree auto close
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " let nerdtree activate upon "vim directory"
@@ -409,8 +426,11 @@ highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none g
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>fo  <Plug>(coc-format-selected)
-nmap <leader>fo  <Plug>(coc-format-selected)
+xmap <leader>fs  <Plug>(coc-format-selected)
+nmap <leader>fs  <Plug>(coc-format-selected)
+
+xmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
+nmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
 
 " augroup mygroup
 "   autocmd!
@@ -571,3 +591,38 @@ let g:user_emmet_settings = {
 let g:instant_markdown_slow = 1
 " enables mathjax!
 let g:instant_markdown_mathjax = 1
+
+" -----------------------------------------------------------------------------
+" closetag setup
+" -----------------------------------------------------------------------------
+
+" filenames like *.xml, *.html, *.xhtml, ...
+" These are the file extensions where this plugin is enabled.
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.jsx'
+
+" filenames like *.xml, *.xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+
+" filetypes like xml, html, xhtml, ...
+" These are the file types where this plugin is enabled.
+let g:closetag_filetypes = 'html,xhtml,phtml, javascriptreact'
+
+" filetypes like xml, xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+
+" integer value [0|1]
+" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'javascriptreact': 'jsxRegion'
+    \ }
+
+" Shortcut for closing tags, default is '>'
+let g:closetag_shortcut = '>'
