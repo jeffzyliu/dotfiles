@@ -1,0 +1,12 @@
+# todayy = current date
+snippet today "Date"
+`date +%F`
+endsnippet
+
+# creates a dynamic box of text (needs to be expanded with c-l to resize right)
+snippet box "Box"
+`!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
+│ $1 │
+`!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
+$0
+endsnippet

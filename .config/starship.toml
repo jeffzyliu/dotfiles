@@ -65,3 +65,9 @@ style = "212"
 truncation_length = 4
 truncate_to_repo = true
 style = "bold green"
+
+[username]
+disabled = true
+
+[hostname]
+style = "purple"

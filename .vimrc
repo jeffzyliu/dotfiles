@@ -42,7 +42,7 @@ Plug 'machakann/vim-highlightedyank' " highlights yanked text
 " Plug 'jiangmiao/auto-pairs' " matches start and end brackets etc (actually not desirable rn)
 Plug 'mhinz/vim-startify' " adds an actual start screen
 Plug 'alvan/vim-closetag' " closes xml tags
-Plug 'psliwka/vim-smoothie' " smooth scrolling
+" Plug 'psliwka/vim-smoothie' " smooth scrolling
 
 call plug#end()
 
@@ -108,7 +108,9 @@ filetype plugin indent on
 " configure all these to have 2 space indents
 autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
 " spellcheck markdown files
-autocmd FileType markdown setlocal spell
+autocmd FileType markdown,tex setlocal spell
+set spelllang=en
+inoremap <C-f> <c-g>u<Esc>[s1z=`]a<c-g>u
 
 " / search tools
 set incsearch " Highlight searching
@@ -168,6 +170,15 @@ inoremap <expr> {<Enter> <SID>CloseBracket()
 set termguicolors
 let ayucolor="mirage"
 colorscheme ayu
+
+" match paren highlights
+highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
+
+" cursor highlight
+highlight clear Cursor
+highlight Cursor ctermfg=24 guifg=#212733 guibg=fg
+highlight clear lCursor
+highlight lCursor ctermfg=24 guifg=#212733 guibg=fg
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
@@ -270,6 +281,8 @@ nmap <leader>gl :diffget //3<CR>
 nmap <leader>gh :diffget //2<CR>
 " open git status
 nmap <leader>gs :G<CR>
+" blame
+nmap <leader>gb :Gblame<CR>
 " open merge panes
 nmap <leader>gm :Gdiffsplit!<CR>
 
@@ -294,7 +307,8 @@ let g:ale_fixers =
             \'css': ['stylelint'],
             \'scss': ['stylelint'],
             \'cpp': ['clang-format'],
-            \'c': ['clang-format']
+            \'c': ['clang-format'],
+            \'tex': ['chktex']
         \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
@@ -498,73 +512,74 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " -----------------------------------------------------------------------------
 "  VIMTEX OPTIONS
 "  ----------------------------------------------------------------------------
-" if has('unix')
-"     if has('mac')
-"         let g:vimtex_view_method = "skim"
-"         let g:vimtex_view_general_viewer
-"                 \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
-"         let g:vimtex_view_general_options = '-r @line @pdf @tex'
-"
-"         " This adds a callback hook that updates Skim after compilation
-"         let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
-"         function! UpdateSkim(status)
-"             if !a:status | return | endif
-"
-"             let l:out = b:vimtex.out()
-"             let l:tex = expand('%:p')
-"             let l:cmd = [g:vimtex_view_general_viewer, '-r']
-"             if !empty(system('pgrep Skim'))
-"             call extend(l:cmd, ['-g'])
-"             endif
-"             if has('nvim')
-"             call jobstart(l:cmd + [line('.'), l:out, l:tex])
-"             elseif has('job')
-"             call job_start(l:cmd + [line('.'), l:out, l:tex])
-"             else
-"             call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
-"             endif
-"         endfunction
-"     else
-"         let g:latex_view_general_viewer = "zathura"
-"         let g:vimtex_view_method = "zathura"
-"     endif
-" elseif has('win32')
-"
-" endif
-"
-" let g:tex_flavor = "latex"
-" let g:vimtex_quickfix_open_on_warning = 0
-" let g:vimtex_quickfix_mode = 2
-" if has('nvim')
-"     let g:vimtex_compiler_progname = 'nvr'
-" endif
-" let g:vimtex_quickfix_mode=0
+if has('unix')
+    if has('mac')
+        let g:vimtex_view_method = "skim"
+        let g:vimtex_view_general_viewer
+                \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+        let g:vimtex_view_general_options = '-r @line @pdf @tex'
+
+        " This adds a callback hook that updates Skim after compilation
+        let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+        function! UpdateSkim(status)
+            if !a:status | return | endif
+
+            let l:out = b:vimtex.out()
+            let l:tex = expand('%:p')
+            let l:cmd = [g:vimtex_view_general_viewer, '-r']
+            if !empty(system('pgrep Skim'))
+            call extend(l:cmd, ['-g'])
+            endif
+            if has('nvim')
+            call jobstart(l:cmd + [line('.'), l:out, l:tex])
+            elseif has('job')
+            call job_start(l:cmd + [line('.'), l:out, l:tex])
+            else
+            call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+            endif
+        endfunction
+    else
+        let g:latex_view_general_viewer = "zathura"
+        let g:vimtex_view_method = "zathura"
+    endif
+elseif has('win32')
+
+endif
+
+let g:tex_flavor = "latex"
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_mode = 2
+if has('nvim')
+    let g:vimtex_compiler_progname = 'nvr'
+endif
+let g:vimtex_quickfix_mode=0
 " set conceallevel=1 " set to 0 if hidden stuff gets confusing
-" let g:tex_conceal='abdmg' 
-"
-" " Can hide specifc warning messages from the quickfix window
-" " Quickfix with Neovim is broken or something
-" " https://github.com/lervag/vimtex/issues/773
-" let g:vimtex_quickfix_latexlog = {
-"             \ 'default' : 1,
-"             \ 'fix_paths' : 0,
-"             \ 'general' : 1,
-"             \ 'references' : 1,
-"             \ 'overfull' : 1,
-"             \ 'underfull' : 1,
-"             \ 'font' : 1,
-"             \ 'packages' : {
-"             \   'default' : 1,
-"             \   'natbib' : 1,
-"             \   'biblatex' : 1,
-"             \   'babel' : 1,
-"             \   'hyperref' : 1,
-"             \   'scrreprt' : 1,
-"             \   'fixltx2e' : 1,
-"             \   'titlesec' : 1,
-"             \ },
-"             \}
-"
+let g:tex_conceal='abdmg'
+
+" Can hide specifc warning messages from the quickfix window
+" Quickfix with Neovim is broken or something
+" https://github.com/lervag/vimtex/issues/773
+let g:vimtex_quickfix_latexlog = {
+            \ 'default' : 1,
+            \ 'fix_paths' : 0,
+            \ 'general' : 1,
+            \ 'references' : 1,
+            \ 'overfull' : 1,
+            \ 'underfull' : 1,
+            \ 'font' : 1,
+            \ 'packages' : {
+            \   'default' : 1,
+            \   'natbib' : 1,
+            \   'biblatex' : 1,
+            \   'babel' : 1,
+            \   'hyperref' : 1,
+            \   'scrreprt' : 1,
+            \   'fixltx2e' : 1,
+            \   'titlesec' : 1,
+            \ },
+            \}
+
+
 " -----------------------------------------------------------------------------
 " Utilisnips setup
 " -----------------------------------------------------------------------------
@@ -589,6 +604,9 @@ let g:user_emmet_settings = {
 " slow down refresh of markdown display server so insert mode isn't so laggy
 " refreshes upon normal mode, no recent keypresses, or save file
 let g:instant_markdown_slow = 1
+" don't start automatically
+let g:instant_markdown_autostart = 0
+nmap <leader>md :InstantMarkdownPreview<cr>
 " enables mathjax!
 let g:instant_markdown_mathjax = 1
 
@@ -598,19 +616,19 @@ let g:instant_markdown_mathjax = 1
 
 " filenames like *.xml, *.html, *.xhtml, ...
 " These are the file extensions where this plugin is enabled.
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.jsx'
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml, *.jsx, *.js'
 
 " filenames like *.xml, *.xhtml, ...
 " This will make the list of non-closing tags self-closing in the specified files.
-let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx, *.js'
 
 " filetypes like xml, html, xhtml, ...
 " These are the file types where this plugin is enabled.
-let g:closetag_filetypes = 'html,xhtml,phtml, javascriptreact'
+let g:closetag_filetypes = 'html,xhtml,phtml, javascriptreact, javascript'
 
 " filetypes like xml, xhtml, ...
 " This will make the list of non-closing tags self-closing in the specified files.
-let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+let g:closetag_xhtml_filetypes = 'xhtml,jsx,javascript'
 
 " integer value [0|1]
 " This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
@@ -619,6 +637,7 @@ let g:closetag_emptyTags_caseSensitive = 1
 " dict
 " Disables auto-close if not in a "valid" region (based on filetype)
 let g:closetag_regions = {
+    \ 'javascript': 'jsxRegion',
     \ 'typescript.tsx': 'jsxRegion,tsxRegion',
     \ 'javascript.jsx': 'jsxRegion',
     \ 'javascriptreact': 'jsxRegion'

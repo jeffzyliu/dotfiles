@@ -15,5 +15,6 @@
   "diagnostic.format": "[%source] %message [%severity]",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-  "prettier.eslintIntegration": true
+  "prettier.eslintIntegration": true,
+  "latex.lint.onChange": true
 }
