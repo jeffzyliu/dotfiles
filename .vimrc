@@ -43,6 +43,8 @@ Plug 'machakann/vim-highlightedyank' " highlights yanked text
 Plug 'mhinz/vim-startify' " adds an actual start screen
 Plug 'alvan/vim-closetag' " closes xml tags
 " Plug 'psliwka/vim-smoothie' " smooth scrolling
+Plug 'junegunn/vim-peekaboo' " shows registers in a side panel with @, ", or C-R
+Plug 'FooSoft/vim-argwrap' " wraps or unwraps arguments
 
 call plug#end()
 
@@ -645,3 +647,11 @@ let g:closetag_regions = {
 
 " Shortcut for closing tags, default is '>'
 let g:closetag_shortcut = '>'
+
+" -----------------------------------------------------------------------------
+" argwrap setup
+" -----------------------------------------------------------------------------
+nnoremap <silent> <leader>aw :ArgWrap<CR>
+
+let g:argwrap_padded_braces = '{'
+let g:argwrap_tail_comma_braces = '{['
