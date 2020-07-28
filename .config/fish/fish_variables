@@ -32,6 +32,7 @@ SETUVAR _fish_abbr_ssh_2D_disc:ssh\x20\x2dK\x20f0044rv\x40discovery
 SETUVAR _fish_abbr_ssh_2D_linux:ssh\x20jinfengl\x4010\x2e0\x2e0\x2e139
 SETUVAR _fish_abbr_ssh_2D_mac:ssh\x20JeffLiu\x40jeff\x2dmbp\x2dserver\x2elocal
 SETUVAR _fish_abbr_v:vim
+SETUVAR _fish_abbr_vnc_2D_mac:open\x20vnc\x3a//jeff\x2dmbp\x2dserver\x2elocal
 SETUVAR _fish_abbr_vrc:vim\x20\x7e/\x2evimrc
 SETUVAR _fish_abbr_weather:curl\x20\x22wttr\x2ein/\x3fm\x22
 SETUVAR _fish_abbr_y:yarn
