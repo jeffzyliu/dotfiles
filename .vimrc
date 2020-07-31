@@ -174,14 +174,15 @@ set termguicolors
 let ayucolor="mirage"
 colorscheme ayu
 
-" match paren highlights
-highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
+" " match paren highlights
+" highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
+autocmd VimEnter,ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 
-" cursor highlight
-highlight clear Cursor
-highlight Cursor ctermfg=24 guifg=#212733 guibg=fg
-highlight clear lCursor
-highlight lCursor ctermfg=24 guifg=#212733 guibg=fg
+" " cursor highlight
+" highlight clear Cursor
+" highlight Cursor ctermfg=24 guifg=#212733 guibg=fg
+" highlight clear lCursor
+" highlight lCursor ctermfg=24 guifg=#212733 guibg=fg
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
@@ -320,11 +321,15 @@ let g:ale_sign_column_always = 1
 " cooler gutter signs??
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '●'
-highlight ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
 " fix ugly highlights
-highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
-highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
+autocmd VimEnter,ColorScheme * :hi ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
+autocmd VimEnter,ColorScheme * :hi ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
+autocmd VimEnter,ColorScheme * :hi ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+autocmd VimEnter,ColorScheme * :hi ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
+" highlight ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
+" highlight ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
+" highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+" highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 map <leader>at :ALEToggle<CR>
 
@@ -362,7 +367,8 @@ function! NERDTreeHighlightFile(extension, fg, guifg)
     exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
-call NERDTreeHighlightFile('c', 'green', 'green') 
+" for some reason doing single character extensions breaks this
+" call NERDTreeHighlightFile('c', 'green', 'green') 
 call NERDTreeHighlightFile('cpp', 'green', 'green')
 call NERDTreeHighlightFile('ini', 'yellow', 'yellow')
 call NERDTreeHighlightFile('md', 'blue', '#3366FF')
@@ -436,9 +442,12 @@ endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-highlight CocHighlightText ctermbg=242 guibg=#343F4C
-highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
+autocmd VimEnter,ColorScheme * :hi CocHighlightText ctermbg=242 guibg=#343F4C
+autocmd VimEnter,ColorScheme * :hi CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
+" highlight CocHighlightText ctermbg=242 guibg=#343F4C
+" highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
 " highlight link CocErrorLine CocErrorSign 
+
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
