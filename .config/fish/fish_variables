@@ -1,7 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR __fish_initialized:3100
-SETUVAR _fish_abbr_0host:\x2d\x2dhost\x200
 SETUVAR _fish_abbr_2crap:vim\x20\x2du\x20NONE
 SETUVAR _fish_abbr_crap:vim\x20\x2du\x20\x7e/\x2ebackupvimrc
 SETUVAR _fish_abbr_crapcrap:vim\x20\x2du\x20NONE
@@ -30,7 +29,7 @@ SETUVAR _fish_abbr_nvrc:vim\x20\x7e/\x2econfig/nvim/init\x2evim
 SETUVAR _fish_abbr_py:python3
 SETUVAR _fish_abbr_ssh_2D_disc:ssh\x20\x2dK\x20f0044rv\x40discovery
 SETUVAR _fish_abbr_ssh_2D_linux:ssh\x20jinfengl\x4010\x2e0\x2e0\x2e139
-SETUVAR _fish_abbr_ssh_2D_mac:ssh\x20\x2dX\x20JeffLiu\x40jeff\x2dmbp\x2dserver\x2elocal
+SETUVAR _fish_abbr_ssh_2D_mac:set\x20\x2dx\x20DISPLAY\x20\x3a0\x20\x26\x26\x20ssh\x20\x2dX\x20JeffLiu\x40jeff\x2dmbp\x2dserver\x2elocal
 SETUVAR _fish_abbr_v:vim
 SETUVAR _fish_abbr_vnc_2D_mac:open\x20vnc\x3a//jeff\x2dmbp\x2dserver\x2elocal
 SETUVAR _fish_abbr_vrc:vim\x20\x7e/\x2evimrc
