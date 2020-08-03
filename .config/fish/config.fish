@@ -2,15 +2,6 @@ if status --is-login
 	thefuck --alias | source
 end
 
-# function nvm
-#    bass source (brew --prefix nvm)/nvm.sh --no-use ';' nvm $argv
-# end
-#
-# set -x NVM_DIR ~/.nvm
-# nvm use default --silent
-#
-
-# fish_vi_key_bindings
 
 # aliases!
 abbr --add --global ssh-flume ssh jeffzyliu@flume.cs.dartmouth.edu
@@ -27,9 +18,9 @@ abbr --add --global mv mv -i
 abbr --add --global mkdir mkdir -p
 
 set -gx FZF_DEFAULT_COMMAND  'rg --files --no-ignore-vcs --hidden -g "!.git"'
-# set -gx FZF_DEFAULT_COMMAND 'ag -u --ignore-dir .git -g ""'
-# set -gx FZF_DEFAULT_COMMAND
 
-starship init fish | source
-fnm env --multi | source
-source $HOME/.cargo/env
+if status --is-interactive
+    starship init fish | source
+    fnm env --multi | source
+    source $HOME/.cargo/env
+end
