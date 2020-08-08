@@ -151,6 +151,9 @@ set splitright " split vertical windows rightward
 
 nmap <leader>t :term<cr>
 
+" buffer swapping
+nnoremap <leader>l :ls<cr>:b<space>
+
 " auto close {
 function! s:CloseBracket()
     let line = getline('.')
