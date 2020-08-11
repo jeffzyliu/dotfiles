@@ -23,9 +23,9 @@ Plug 'tpope/vim-surround' " helps change surrounding brackets/parens/quotes toge
 Plug 'airblade/vim-gitgutter' " shows which lines diff in git
 Plug 'tpope/vim-fugitive' " gives tons of git power, e.g. blame by line
 Plug 'editorconfig/editorconfig-vim' " uses editorconfig to inform formatting
-Plug 'mattn/emmet-vim' " provides snippets, MAY DELETE IF ULTISNIPS IS JUST BETTER
-Plug 'sirver/ultisnips' " may replace emmet
-Plug 'w0rp/ale' " asynchronous linting engine or something
+Plug 'mattn/emmet-vim' " html expansion and such
+Plug 'sirver/ultisnips' " snippet engine
+Plug 'w0rp/ale' " asynchronous linting engine
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fzf command
 Plug 'junegunn/fzf.vim' " uses fzf for fuzzy control-p
 Plug 'terryma/vim-multiple-cursors' " control-n to do multicursor work 
@@ -45,6 +45,8 @@ Plug 'alvan/vim-closetag' " closes xml tags
 " Plug 'psliwka/vim-smoothie' " smooth scrolling
 Plug 'junegunn/vim-peekaboo' " shows registers in a side panel with @, ", or C-R
 Plug 'FooSoft/vim-argwrap' " wraps or unwraps arguments
+Plug 'tjvr/vim-nearley' " nearley!
+Plug 'unblevable/quick-scope' " highlights unique chars to jump to with f
 
 call plug#end()
 
@@ -109,7 +111,7 @@ nmap <leader>q :q<cr>
 " config by filetype
 filetype plugin indent on
 " configure all these to have 2 space indents
-autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript,jst setlocal shiftwidth=2 softtabstop=2 expandtab
 " spellcheck markdown files
 autocmd FileType markdown,tex setlocal spell
 set spelllang=en
@@ -172,14 +174,10 @@ inoremap <expr> {<Enter> <SID>CloseBracket()
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
 
-" color support for ayu mirage
 set termguicolors
-let ayucolor="mirage"
-colorscheme ayu
-
 " " match paren highlights
 " highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
-autocmd VimEnter,ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
+autocmd ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 
 " " cursor highlight
 " highlight clear Cursor
@@ -191,8 +189,8 @@ autocmd VimEnter,ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#21
 let g:indent_guides_enable_on_vim_startup = 1
 " colors
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#373C47   
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#4B4F59  
+autocmd Colorscheme * :hi IndentGuidesOdd  guibg=#373C47   
+autocmd Colorscheme * :hi IndentGuidesEven guibg=#4B4F59  
 
 " React jsx highlights on
 let g:vim_jsx_pretty_highlight_close_tag = 1
@@ -325,10 +323,10 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '●'
 " fix ugly highlights
-autocmd VimEnter,ColorScheme * :hi ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
-autocmd VimEnter,ColorScheme * :hi ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
-autocmd VimEnter,ColorScheme * :hi ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
-autocmd VimEnter,ColorScheme * :hi ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
+autocmd ColorScheme * :hi ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
+autocmd ColorScheme * :hi ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
+autocmd ColorScheme * :hi ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
+autocmd ColorScheme * :hi ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 " highlight ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
 " highlight ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
 " highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
@@ -355,6 +353,37 @@ let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
 
 " map nerdtreetoggle
 map <C-o> :NERDTreeToggle<CR>
+" let nerdtree highlight files differently depending on extension
+" NERDTree File highlighting
+function! NERDTreeHighlightFile(extension, fg, guifg)
+    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
+    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+endfunction
+
+augroup nerd_highlight 
+  autocmd!
+    " for some reason doing single character extensions breaks this
+    " call NERDTreeHighlightFile('c', 'green', 'green') 
+    autocmd ColorScheme * call NERDTreeHighlightFile('cpp', 'green', 'green')
+    autocmd ColorScheme * call NERDTreeHighlightFile('ini', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('md', 'blue', '#3366FF')
+    autocmd ColorScheme * call NERDTreeHighlightFile('yml', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('config', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('conf', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('json', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('html', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('styl', 'cyan', 'cyan')
+    autocmd ColorScheme * call NERDTreeHighlightFile('css', 'cyan', 'cyan')
+    autocmd ColorScheme * call NERDTreeHighlightFile('coffee', 'Red', 'red')
+    autocmd ColorScheme * call NERDTreeHighlightFile('js', 'Red', '#ffa500')
+    autocmd ColorScheme * call NERDTreeHighlightFile('jsx', 'Red', '#ffa500')
+    autocmd ColorScheme * call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
+augroup END
+
+let g:NERDTreeShowHidden = 1
+" Hide certain files and directories from NERDTree
+let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
+
 " let nerdtree activate upon just "vim"
 " autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -363,33 +392,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " let nerdtree activate upon "vim directory"
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-" let nerdtree highlight files differently depending on extension
-" NERDTree File highlighting
-function! NERDTreeHighlightFile(extension, fg, guifg)
-    exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermfg='. a:fg .' guifg='. a:guifg
-    exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-endfunction
-
-" for some reason doing single character extensions breaks this
-" call NERDTreeHighlightFile('c', 'green', 'green') 
-call NERDTreeHighlightFile('cpp', 'green', 'green')
-call NERDTreeHighlightFile('ini', 'yellow', 'yellow')
-call NERDTreeHighlightFile('md', 'blue', '#3366FF')
-call NERDTreeHighlightFile('yml', 'yellow', 'yellow')
-call NERDTreeHighlightFile('config', 'yellow', 'yellow')
-call NERDTreeHighlightFile('conf', 'yellow', 'yellow')
-call NERDTreeHighlightFile('json', 'yellow', 'yellow')
-call NERDTreeHighlightFile('html', 'yellow', 'yellow')
-call NERDTreeHighlightFile('styl', 'cyan', 'cyan')
-call NERDTreeHighlightFile('css', 'cyan', 'cyan')
-call NERDTreeHighlightFile('coffee', 'Red', 'red')
-call NERDTreeHighlightFile('js', 'Red', '#ffa500')
-call NERDTreeHighlightFile('jsx', 'Red', '#ffa500')
-call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
-
-let g:NERDTreeShowHidden = 1
-" Hide certain files and directories from NERDTree
-let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
 
 " -----------------------------------------------------------------------------
 " COC autocomplete engine setup
@@ -445,8 +447,8 @@ endfunction
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-autocmd VimEnter,ColorScheme * :hi CocHighlightText ctermbg=242 guibg=#343F4C
-autocmd VimEnter,ColorScheme * :hi CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
+autocmd ColorScheme * :hi CocHighlightText ctermbg=242 guibg=#343F4C
+autocmd ColorScheme * :hi CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
 " highlight CocHighlightText ctermbg=242 guibg=#343F4C
 " highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
 " highlight link CocErrorLine CocErrorSign 
@@ -668,3 +670,18 @@ nnoremap <silent> <leader>aw :ArgWrap<CR>
 
 let g:argwrap_padded_braces = '{'
 let g:argwrap_tail_comma_braces = '{['
+
+" -----------------------------------------------------------------------------
+" quickscope setup
+" -----------------------------------------------------------------------------
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+augroup qs_colors
+  autocmd!
+  autocmd ColorScheme * highlight QuickScopePrimary guifg='#66ff33' gui=underline ctermfg=155 cterm=underline
+  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#ffff00' gui=underline ctermfg=81 cterm=underline
+augroup END
+
+" color scheme last
+let ayucolor="mirage"
+colorscheme ayu
