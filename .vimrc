@@ -378,6 +378,7 @@ augroup nerd_highlight
     autocmd ColorScheme * call NERDTreeHighlightFile('js', 'Red', '#ffa500')
     autocmd ColorScheme * call NERDTreeHighlightFile('jsx', 'Red', '#ffa500')
     autocmd ColorScheme * call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
+    autocmd ColorScheme * call NERDTreeHighlightFile('py', 'Magenta', '#ff00ff')
 augroup END
 
 let g:NERDTreeShowHidden = 1
