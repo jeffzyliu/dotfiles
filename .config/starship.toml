@@ -21,7 +21,7 @@ prompt_order = [
     "python",
     "ruby",
     "rust",
-    "conda",
+    # "conda",
     "aws",
     "env_var",
     "cmd_duration",
