@@ -16,5 +16,6 @@
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "prettier.eslintIntegration": true,
+  "eslint.packageManager": "yarn",
   "latex.lint.onChange": true
 }
