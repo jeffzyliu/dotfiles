@@ -4,6 +4,8 @@ SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_2crap:vim\x20\x2du\x20NONE
 SETUVAR _fish_abbr_c:clear
 SETUVAR _fish_abbr_co:conda
+SETUVAR _fish_abbr_coac:conda\x20activate
+SETUVAR _fish_abbr_codeac:conda\x20deactivate
 SETUVAR _fish_abbr_cp:cp\x20\x2di
 SETUVAR _fish_abbr_crap:vim\x20\x2du\x20\x7e/\x2ebackupvimrc
 SETUVAR _fish_abbr_crapcrap:vim\x20\x2du\x20NONE
