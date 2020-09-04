@@ -1,14 +1,3 @@
-" deprecated function for installing a rust plugin
-" function! BuildComposer(info)
-"   if a:info.status != 'unchanged' || a:info.force
-"     if has('nvim')
-"       !cargo build --release --locked
-"     else
-"       !cargo build --release --locked --no-default-features --features json-rpc
-"     endif
-"   endif
-" endfunction
-
 " -----------------------------------------------------------------------------
 " VIM PLUG PLUGIN DEFINITIONS
 " -----------------------------------------------------------------------------
@@ -36,13 +25,10 @@ Plug 'tomtom/tcomment_vim' " gives the gcc and gc commands to toggle comment
 Plug 'lervag/vimtex' " latex helper
 Plug 'mlaursen/vim-react-snippets' " gives a lot of js and jsx snippets for react
 Plug 'easymotion/vim-easymotion' " wow cheating to move around easier
-" Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') } " instant markdown rendering
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " simpler markdown?
 Plug 'machakann/vim-highlightedyank' " highlights yanked text
-" Plug 'jiangmiao/auto-pairs' " matches start and end brackets etc (actually not desirable rn)
 Plug 'mhinz/vim-startify' " adds an actual start screen
 Plug 'alvan/vim-closetag' " closes xml tags
-" Plug 'psliwka/vim-smoothie' " smooth scrolling
 Plug 'junegunn/vim-peekaboo' " shows registers in a side panel with @, ", or C-R
 Plug 'FooSoft/vim-argwrap' " wraps or unwraps arguments
 Plug 'tjvr/vim-nearley' " nearley!
@@ -135,12 +121,6 @@ set undodir=~/.vim/undo//
 " set nobackup
 " set nowritebackup
 
-" -- FOLDING -- (disabled since this is slow)
-" set foldmethod=indent "syntax highlighting items specify folds
-" set foldcolumn=1 "defines 1 col at window left, to indicate folding
-" " let javaScript_fold=1 "activate folding by JS syntax
-" set foldlevelstart=99 "start file with all folds opened
-
 " Don't dispay mode in command line (lightline already shows it)
 set noshowmode
 
@@ -178,12 +158,6 @@ set termguicolors
 " " match paren highlights
 " highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 autocmd ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
-
-" " cursor highlight
-" highlight clear Cursor
-" highlight Cursor ctermfg=24 guifg=#212733 guibg=fg
-" highlight clear lCursor
-" highlight lCursor ctermfg=24 guifg=#212733 guibg=fg
 
 " indent highlights on
 let g:indent_guides_enable_on_vim_startup = 1
@@ -327,10 +301,6 @@ autocmd ColorScheme * :hi ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
 autocmd ColorScheme * :hi ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
 autocmd ColorScheme * :hi ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
 autocmd ColorScheme * :hi ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
-" highlight ALEErrorSign ctermbg=NONE ctermfg=red guifg=#ff0000
-" highlight ALEWarningSign ctermbg=NONE ctermfg=yellow guifg=#fab005
-" highlight ALEError ctermbg=242 cterm=underline term=none ctermfg=none guibg=#645C73
-" highlight ALEWarning ctermbg=242 cterm=underline term=none ctermfg=none guibg=#398E89
 
 map <leader>at :ALEToggle<CR>
 
@@ -450,9 +420,6 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd ColorScheme * :hi CocHighlightText ctermbg=242 guibg=#343F4C
 autocmd ColorScheme * :hi CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
-" highlight CocHighlightText ctermbg=242 guibg=#343F4C
-" highlight CocErrorHighlight ctermbg=242 cterm=underline term=none ctermfg=none gui=undercurl guibg=#645C73
-" highlight link CocErrorLine CocErrorSign 
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
