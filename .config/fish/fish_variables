@@ -43,7 +43,7 @@ SETUVAR _fish_abbr_py:python
 SETUVAR _fish_abbr_rm:rm\x20\x2di
 SETUVAR _fish_abbr_ssh_2D_disc:ssh\x20\x2dK\x20f0044rv\x40discovery
 SETUVAR _fish_abbr_ssh_2D_flume:ssh\x20jeffzyliu\x40flume\x2ecs\x2edartmouth\x2eedu
-SETUVAR _fish_abbr_ssh_2D_mac:set\x20\x2dx\x20DISPLAY\x20\x3a0\x20\x26\x26\x20ssh\x20\x2dX\x20JeffLiu\x40jeff\x2dmbp\x2dserver\x2elocal
+SETUVAR _fish_abbr_ssh_2D_mac:ssh\x20JeffLiu\x40jeff\x2dmbp\x2dserver\x2elocal
 SETUVAR _fish_abbr_ssh_2D_moose:ssh\x20jeffzyliu\x40moose\x2ecs\x2edartmouth\x2eedu
 SETUVAR _fish_abbr_v:vim
 SETUVAR _fish_abbr_vnc_2D_mac:open\x20vnc\x3a//jeff\x2dmbp\x2dserver\x2elocal

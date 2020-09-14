@@ -3,3 +3,6 @@ create_default_packages:
 
 env_prompt: ({name})
 auto_activate_base: false
+ssl_verify: true
+channels:
+  - defaults
