@@ -150,6 +150,8 @@ function! s:CloseBracket()
 endfunction
 inoremap <expr> {<Enter> <SID>CloseBracket()
 
+set t_Co=256 " allows better colors?
+
 " -----------------------------------------------------------------------------
 " PLUGIN SETUP
 " -----------------------------------------------------------------------------
