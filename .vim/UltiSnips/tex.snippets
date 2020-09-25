@@ -342,6 +342,20 @@ snippet xmm "x" iA
 x_{m}
 endsnippet
 
+context "math()"
+snippet mcal "mathcal" iA
+\mathcal{$1}$0
+endsnippet
+
+snippet lll "l" iA
+\ell
+endsnippet
+
+context "math()"
+snippet nabl "nabla" iA
+\nabla
+endsnippet
+
 snippet R0+ "R0+" iA
 \\R_0^+
 endsnippet
@@ -408,6 +422,10 @@ snippet invs "inverse" iA
 ^{-1}
 endsnippet
 
+context "math()"
+snippet s.t. "such that" iA
+\mid
+endsnippet
 
 snippet ~~ "~" iA
 \sim
@@ -415,7 +433,16 @@ endsnippet
 
 context "math()"
 snippet cc "subset" Ai
-\subset
+\subseteq
+endsnippet
+
+context "math()"
+snippet set "set" wA
+\\{$1\\} $0
+endsnippet
+
+snippet || "mid" iA
+ \mid
 endsnippet
 
 context "math()"
@@ -434,7 +461,7 @@ snippet inn "in " iA
 endsnippet
 
 snippet NN "n" iA
-\N
+\mathbb{N}
 endsnippet
 
 snippet Nn "cap" iA
@@ -466,11 +493,11 @@ snippet PP "prob" iA
 endsnippet
 
 snippet QQ "Q" iA
-\Q
+\mathbb{Q}
 endsnippet
 
 snippet ZZ "Z" iA
-\Z
+\mathbb{Z}
 endsnippet
 
 context "math()"
