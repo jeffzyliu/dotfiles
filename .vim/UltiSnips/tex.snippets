@@ -180,28 +180,49 @@ snippet *. "cdot" Ai
 \cdot
 endsnippet
 
+context "math()"
 snippet => "implies" Ai
-\implies
+\Rightarrow
 endsnippet
 
+context "math()"
 snippet =< "implied by" Ai
-\impliedby
+\Leftarrow
 endsnippet
 
 context "math()"
 snippet iff "iff" Ai
-\iff
+\LeftRightArrow
 endsnippet
 
-snippet == "equals" iA
-&= $1 \\\\
+context "math()"
+snippet andd "logical and" Ai
+\land
+endsnippet
+
+context "math()"
+snippet orr "logical or" Ai
+\lor
+endsnippet
+
+context "math()"
+snippet nott "logical not" Ai
+\neg
+endsnippet
+
+# snippet == "equals" iA
+# &= $1 \\\\
+# endsnippet
+
+snippet == "is equivalent to" iA
+\equiv
 endsnippet
 
 snippet ~= "approx" iA
 \approx
 endsnippet
 
-snippet != "equals" iA
+snippet != "not equals" iA
 \neq
 endsnippet
 
@@ -292,7 +313,7 @@ snippet >= "geq" iA
 endsnippet
 
 context "math()"
-snippet EE "geq" iA
+snippet EE "exists" iA
 \exists
 endsnippet
 
