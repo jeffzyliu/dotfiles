@@ -103,6 +103,8 @@ autocmd FileType markdown,tex setlocal spell
 set spelllang=en
 inoremap <C-f> <c-g>u<Esc>[s1z=`]a<c-g>u
 
+let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'python']
+
 " / search tools
 set incsearch " Highlight searching
 set showmatch
