@@ -97,7 +97,7 @@ nmap <leader>q :q<cr>
 " config by filetype
 filetype plugin indent on
 " configure all these to have 2 space indents
-autocmd FileType javascript,javascriptreact,json,html,css,scss,typescript,jst setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType javascript,javascriptreact,html,css,scss,typescript,jst setlocal shiftwidth=2 softtabstop=2 expandtab
 " spellcheck markdown files
 autocmd FileType markdown,tex setlocal spell
 set spelllang=en
@@ -160,7 +160,6 @@ set t_Co=256 " allows better colors?
 
 set termguicolors
 " " match paren highlights
-" highlight MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 autocmd ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 
 " indent highlights on
@@ -185,7 +184,7 @@ map <C-f> :Rg
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-set signcolumn=yes ""
+set signcolumn=yes
 
 " -----------------------------------------------------------------------------
 " LIGHTLINE SETUP
