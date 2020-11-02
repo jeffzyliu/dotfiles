@@ -278,7 +278,8 @@ let g:ale_linters =
             \'scss': ['stylelint'],
             \'html': ['htmlhint'],
             \'cpp': ['clang'],
-            \'c': ['clang']
+            \'c': ['clang'],
+            \'perl': ['perl', 'perlcritic']
         \}
 let g:ale_linters_explicit = 1
 let g:ale_fixers =
@@ -290,7 +291,8 @@ let g:ale_fixers =
             \'scss': ['stylelint'],
             \'cpp': ['clang-format'],
             \'c': ['clang-format'],
-            \'tex': ['chktex']
+            \'tex': ['chktex'],
+            \'perl': ['perltidy']
         \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
@@ -319,6 +321,13 @@ let g:ale_open_list = 0
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s (%code%) [%severity%]'
+
+" perl options
+let g:ale_perl_perl_options = '-c -Mwarnings -Ilib -It/lib'
+let g:ale_perl_perlcritic_showrules = 1
+let g:ale_type_map = {
+\ 'perlcritic': {'ES': 'WS', 'E': 'W'},
+\}
 
 " -----------------------------------------------------------------------------
 " NerdTree Config
