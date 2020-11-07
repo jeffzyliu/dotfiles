@@ -33,6 +33,7 @@ Plug 'junegunn/vim-peekaboo' " shows registers in a side panel with @, ", or C-R
 Plug 'FooSoft/vim-argwrap' " wraps or unwraps arguments
 Plug 'tjvr/vim-nearley' " nearley!
 Plug 'unblevable/quick-scope' " highlights unique chars to jump to with f
+Plug 'kana/vim-arpeggio' " jk is esc
 
 call plug#end()
 
@@ -89,10 +90,11 @@ nmap <leader>n :set relativenumber!<cr>
 " refresh syntax highlighting
 nmap <leader>syn :syn sync fromstart<cr>
 
-" Fast saving
-nmap <leader>w :w<cr>
-nmap <leader>q :q<cr>
-" need to press enter after that for speed
+" shifting control to leader
+" nmap <leader>w <C-w>
+" nmap <leader>q :q<cr>
+
+nmap ; :
 
 " config by filetype
 filetype plugin indent on
@@ -650,6 +652,12 @@ nnoremap <silent> <leader>aw :ArgWrap<CR>
 
 let g:argwrap_padded_braces = '{'
 let g:argwrap_tail_comma_braces = '{['
+
+" -----------------------------------------------------------------------------
+" arpeggio setup
+" -----------------------------------------------------------------------------
+
+call arpeggio#map('i', '', 0, 'jk', '<Esc>')
 
 " -----------------------------------------------------------------------------
 " quickscope setup
