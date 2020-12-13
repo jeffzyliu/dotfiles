@@ -15,7 +15,7 @@ set -x PERL_MM_OPT INSTALL_BASE=/Users/JeffLiu/perl5;
 
 if status --is-interactive
     starship init fish | source
-    fnm env --multi | source
+    fnm env | source
     source $HOME/.cargo/env
 end
 

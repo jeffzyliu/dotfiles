@@ -1,40 +1,44 @@
-prompt_order = [
-    "time",
-    "username",
-    "hostname",
-    "kubernetes",
-    "directory",
-    "git_branch",
-    "git_commit",
-    "git_state",
-    "git_status",
-    "docker_context",
-    "package",
-    "golang",
-    "haskell",
-    "java",
-    "julia",
-    "nodejs",
-    "ocaml",
-    "php",
-    "purescript",
-    "python",
-    "ruby",
-    "rust",
-    # "conda",
-    "aws",
-    "env_var",
-    "cmd_duration",
-    "custom",
-    "line_break",
-    "jobs",
-    "battery",
-    "character",
-]
+format ="""\
+    $time\
+    $username\
+    $hostname\
+    $kubernetes\
+    $directory\
+    $git_branch\
+    $git_commit\
+    $git_state\
+    $git_status\
+    $docker_context\
+    $package\
+    $golang\
+    $haskell\
+    $java\
+    $julia\
+    $nodejs\
+    $ocaml\
+    $php\
+    $purescript\
+    $python\
+    $ruby\
+    $rust\
+    $aws\
+    $env_var\
+    $cmd_duration\
+    $custom\
+    $line_break\
+    $jobs\
+    $battery\
+    $character\
+    """
 
 [cmd_duration]
 min_time = 500
 show_milliseconds = true
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold green)"
 
 [git_branch]
 style = "bold cyan"
@@ -48,7 +52,9 @@ stashed_count.enabled = true
 stashed_count.style = "bold blue"
 deleted_count.enabled = true
 deleted_count.style = "white"
-show_sync_count = true
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
 untracked_count.enabled = true
 untracked_count.style = "green"
 renamed_count.enabled = true
@@ -58,11 +64,13 @@ staged_count.style = "cyan"
 
 [time]
 disabled = false
-format = "🕰️  %T"
+format = "🕰️  [$time]($style) "
 style = "212"
 
 [directory]
 truncation_length = 4
+format = "in [$path]($style)[$read_only]($read_only_style) "
+truncation_symbol = ".../"
 truncate_to_repo = true
 style = "bold green"
 
