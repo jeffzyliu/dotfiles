@@ -22,7 +22,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'} " COC autocomplete engine
 Plug 'sheerun/vim-polyglot' " auto-includes various language syntax highlighters
 Plug 'nathanaelkane/vim-indent-guides' " shows indents with blocks
 Plug 'tomtom/tcomment_vim' " gives the gcc and gc commands to toggle comment
-Plug 'lervag/vimtex' " latex helper
+Plug 'lervag/vimtex', {'for': 'tex'} " latex helper
 Plug 'mlaursen/vim-react-snippets' " gives a lot of js and jsx snippets for react
 Plug 'easymotion/vim-easymotion' " wow cheating to move around easier
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'} " simpler markdown?
@@ -31,7 +31,7 @@ Plug 'mhinz/vim-startify' " adds an actual start screen
 Plug 'alvan/vim-closetag' " closes xml tags
 Plug 'junegunn/vim-peekaboo' " shows registers in a side panel with @, ", or C-R
 Plug 'FooSoft/vim-argwrap' " wraps or unwraps arguments
-Plug 'tjvr/vim-nearley' " nearley!
+Plug 'tjvr/vim-nearley', {'for': 'nearley'} " nearley!
 Plug 'unblevable/quick-scope' " highlights unique chars to jump to with f
 Plug 'kana/vim-arpeggio' " jk is esc
 
@@ -91,10 +91,10 @@ nmap <leader>n :set relativenumber!<cr>
 nmap <leader>syn :syn sync fromstart<cr>
 
 " shifting control to leader
-" nmap <leader>w <C-w>
-" nmap <leader>q :q<cr>
+nmap <leader>w :w<cr>
+nmap <leader>q :q<cr>
 
-nmap ; :
+" nmap ; :
 
 " config by filetype
 filetype plugin indent on
@@ -110,7 +110,8 @@ let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'python
 " / search tools
 set incsearch " Highlight searching
 set showmatch
-set nohlsearch " use :hlsearch if we have to
+set hlsearch
+nmap <leader>h :noh<cr>
 set ignorecase
 set smartcase
 set autoread " autoread files

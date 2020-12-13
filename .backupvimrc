@@ -62,7 +62,8 @@ autocmd FileType markdown setlocal spell
 " / search tools
 set incsearch " Highlight searching
 set showmatch
-set nohlsearch " use :hlsearch if we have to
+set hlsearch
+nmap <leader>h :noh<cr>
 set ignorecase
 set smartcase
 set autoread " autoread files
@@ -85,6 +86,9 @@ vnoremap <leader>p "_dP
 set splitright " split vertical windows rightward
 
 nmap <leader>t :term<cr>
+
+" buffer swapping
+nnoremap <leader>l :ls<cr>:b<space>
 
 set termguicolors
 colorscheme afterglow
