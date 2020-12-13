@@ -79,3 +79,4 @@ disabled = true
 
 [hostname]
 style = "purple"
+format =  "on [$hostname]($style) "
