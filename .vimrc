@@ -47,8 +47,8 @@ syntax on
 set nocompatible
 set number norelativenumber
 set encoding=utf8
-set clipboard^=unnamed
-" set clipboard=unnamed " set yank to system keyboard
+" set clipboard^=unnamed
+set clipboard=unnamed " set yank to system keyboard
 set autoindent " always set autoindenting on
 set copyindent " copy the previous indentation on autoindenting
 set expandtab " expand tabs by default (overloadable per file type)
