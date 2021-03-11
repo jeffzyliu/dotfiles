@@ -1,6 +1,6 @@
 {
   "tsserver.npm": "/usr/local/bin/npm",
-  "eslint.filetypes": [
+  "eslint.probe": [
     "javascript",
     "typescript",
     "typescriptreact",
@@ -15,6 +15,7 @@
   "diagnostic.messageDelay": 100,
   "diagnostic.format": "[%source] %message [%severity]",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+  "coc.preferences.enableMarkdown": true,
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "prettier.eslintIntegration": true,
   "eslint.packageManager": "yarn",

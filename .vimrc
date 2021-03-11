@@ -446,6 +446,8 @@ nmap <leader>fs  <Plug>(coc-format-selected)
 xmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
 nmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
 
+nmap <leader>zz  :CocCommand eslint.showOutputChannel<cr>
+
 " augroup mygroup
 "   autocmd!
 "   " Setup formatexpr specified filetype(s).
