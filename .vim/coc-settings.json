@@ -10,6 +10,7 @@
   "diagnostic.errorSign": "✘",
   "diagnostic.warningSign": "●",
   "diagnostic.infoSign": "●",
+  "diagnostic.hintSign": "►",
   "diagnostic.messageTarget": "echo",
   "diagnostic.messageDelay": 100,
   "diagnostic.format": "[%source] %message [%severity]",
