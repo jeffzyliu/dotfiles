@@ -48,7 +48,7 @@ set nocompatible
 set number norelativenumber
 set encoding=utf8
 " set clipboard^=unnamed
-set clipboard=unnamed " set yank to system keyboard
+" set clipboard=unnamed " set yank to system keyboard
 set autoindent " always set autoindenting on
 set copyindent " copy the previous indentation on autoindenting
 set expandtab " expand tabs by default (overloadable per file type)
@@ -348,22 +348,29 @@ endfunction
 augroup nerd_highlight 
   autocmd!
     " for some reason doing single character extensions breaks this
-    " call NERDTreeHighlightFile('c', 'green', 'green') 
-    autocmd ColorScheme * call NERDTreeHighlightFile('cpp', 'green', 'green')
-    autocmd ColorScheme * call NERDTreeHighlightFile('ini', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('md', 'blue', '#3366FF')
-    autocmd ColorScheme * call NERDTreeHighlightFile('yml', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('config', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('conf', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('json', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('html', 'yellow', 'yellow')
-    autocmd ColorScheme * call NERDTreeHighlightFile('styl', 'cyan', 'cyan')
-    autocmd ColorScheme * call NERDTreeHighlightFile('css', 'cyan', 'cyan')
-    autocmd ColorScheme * call NERDTreeHighlightFile('coffee', 'Red', 'red')
-    autocmd ColorScheme * call NERDTreeHighlightFile('js', 'Red', '#ffa500')
-    autocmd ColorScheme * call NERDTreeHighlightFile('jsx', 'Red', '#ffa500')
-    autocmd ColorScheme * call NERDTreeHighlightFile('php', 'Magenta', '#ff00ff')
-    autocmd ColorScheme * call NERDTreeHighlightFile('py', 'Magenta', '#ff00ff')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.c', 'green', 'green') 
+    autocmd ColorScheme * call NERDTreeHighlightFile('.h', 'darkgreen', 'darkgreen') 
+    autocmd ColorScheme * call NERDTreeHighlightFile('.cpp', 'green', 'green')
+    " autocmd ColorScheme * call NERDTreeHighlightFile('.ini', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.md', 'blue', '#3366FF')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.yml', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.toml', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.config', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.conf', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.json', 'yellow', 'yellow')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.html', 'yellow', 'yellow')
+    " autocmd ColorScheme * call NERDTreeHighlightFile('.styl', 'cyan', 'cyan')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.css', 'cyan', 'cyan')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.scss', 'cyan', 'cyan')
+    " autocmd ColorScheme * call NERDTreeHighlightFile('.coffee', 'Red', 'red')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.js', 'Red', '#ffa500')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.ts', 'Red', '#ffa500')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.jsx', 'Red', '#ffa500')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.rs', 'Red', 'red')
+    " autocmd ColorScheme * call NERDTreeHighlightFile('.php', 'Magenta', '#ff00ff')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.py', 'Magenta', '#ff00ff')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.ipynb', 'Magenta', '#ff00ff')
+    autocmd ColorScheme * call NERDTreeHighlightFile('.lock', 'Magenta', 'darkgray')
 augroup END
 
 let g:NERDTreeShowHidden = 1
