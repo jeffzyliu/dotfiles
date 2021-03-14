@@ -13,6 +13,8 @@
   "diagnostic.hintSign": "►",
   "diagnostic.messageTarget": "echo",
   "diagnostic.messageDelay": 100,
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextPrefix": "",
   "diagnostic.format": "[%source] %message [%severity]",
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.enableMarkdown": true,

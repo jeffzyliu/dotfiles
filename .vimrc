@@ -269,7 +269,7 @@ nmap <leader>gh :diffget //2<CR>
 " open git status
 nmap <leader>gs :G<CR>
 " blame
-nmap <leader>gb :Gblame<CR>
+nmap <leader>gb :Git blame<CR>
 " open merge panes
 nmap <leader>gm :Gdiffsplit!<CR>
 
@@ -456,6 +456,7 @@ nmap <leader>fs  <Plug>(coc-format-selected)
 
 xmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
 nmap <leader>fo  :CocCommand eslint.executeAutofix<cr>
+nmap <leader>fi  :call CocAction('format')<cr>
 
 nmap <leader>zz  :CocCommand eslint.showOutputChannel<cr>
 
