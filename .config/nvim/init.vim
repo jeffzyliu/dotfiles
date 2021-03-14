@@ -3,6 +3,8 @@ let &packpath = &runtimepath
 
 source ~/.vimrc
 
+set guicursor=
+
 nmap <leader>t :split term://fish<cr>
 tnoremap <C-w> <C-\><C-n><C-w>
 tnoremap <C-b> <C-\><C-n>

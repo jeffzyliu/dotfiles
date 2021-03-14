@@ -460,6 +460,9 @@ nmap <leader>fi  :call CocAction('format')<cr>
 
 nmap <leader>zz  :CocCommand eslint.showOutputChannel<cr>
 
+nmap <silent> <Esc> <Plug>(coc-float-hide)
+nmap <leader>al  <Plug>(coc-codelens-action)
+
 " augroup mygroup
 "   autocmd!
 "   " Setup formatexpr specified filetype(s).
