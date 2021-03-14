@@ -14,13 +14,13 @@ if status --is-login
     # misc
     fnm env | source
     source $HOME/.cargo/env
-	thefuck --alias | source
 
 	set -x PATH /Users/JeffLiu/bin $PATH
 end
 
 if status --is-interactive
     starship init fish | source
+	thefuck --alias | source
 end
 
 # >>> conda initialize >>>
