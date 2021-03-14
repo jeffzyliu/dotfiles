@@ -139,7 +139,8 @@ set splitright " split vertical windows rightward
 nmap <leader>t :term<cr>
 
 " buffer swapping
-nnoremap <leader>l :ls<cr>:b<space>
+" nnoremap <leader>l :ls<cr>:b<space>
+nnoremap <leader>l :Buffer<cr>
 
 " auto close {
 function! s:CloseBracket()
@@ -169,6 +170,7 @@ autocmd ColorScheme * :hi MatchParen cterm=none guifg=#ed21d2 guibg=#212733
 let g:indent_guides_enable_on_vim_startup = 1
 " colors
 let g:indent_guides_auto_colors = 0
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify']
 autocmd Colorscheme * :hi IndentGuidesOdd  guibg=#373C47   
 autocmd Colorscheme * :hi IndentGuidesEven guibg=#4B4F59  
 

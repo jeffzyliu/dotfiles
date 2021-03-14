@@ -64,13 +64,13 @@ staged_count.style = "cyan"
 
 [time]
 disabled = false
-format = "🕰️  [$time]($style) "
+format = "[$time]($style) "
 style = "212"
 
 [directory]
 truncation_length = 4
 format = "in [$path]($style)[$read_only]($read_only_style) "
-truncation_symbol = ".../"
+truncation_symbol = ".."
 truncate_to_repo = true
 style = "bold green"
 
