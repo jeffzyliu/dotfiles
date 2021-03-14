@@ -379,7 +379,7 @@ augroup END
 
 let g:NERDTreeShowHidden = 1
 " Hide certain files and directories from NERDTree
-let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
+let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$', '^node_modules$']
 
 " let nerdtree activate upon just "vim"
 " autocmd StdinReadPre * let s:std_in=1
