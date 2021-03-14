@@ -297,7 +297,8 @@ let g:ale_fixers =
             \'cpp': ['clang-format'],
             \'c': ['clang-format'],
             \'tex': ['chktex'],
-            \'perl': ['perltidy']
+            \'perl': ['perltidy'],
+            \'sh': ['shfmt']
         \} 
 " ALE fixer shortcut
 nmap <leader>f :ALEFix<cr>
