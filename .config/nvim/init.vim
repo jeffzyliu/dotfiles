@@ -5,7 +5,7 @@ source ~/.vimrc
 
 nmap <leader>t :split term://fish<cr>
 tnoremap <C-w> <C-\><C-n><C-w>
-tnoremap <C-m> <C-\><C-n>
+tnoremap <C-b> <C-\><C-n>
 
 autocmd BufEnter * :IndentGuidesEnable
 
