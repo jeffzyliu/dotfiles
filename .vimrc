@@ -463,6 +463,10 @@ nmap <leader>zz  :CocCommand eslint.showOutputChannel<cr>
 nmap <silent> <Esc> <Plug>(coc-float-hide)
 nmap <leader>al  <Plug>(coc-codelens-action)
 
+" fixes a bug with remapping escape
+nnoremap <esc>^[ <esc>^[
+
+
 " augroup mygroup
 "   autocmd!
 "   " Setup formatexpr specified filetype(s).
