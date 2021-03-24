@@ -26,5 +26,6 @@
   "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
   "prettier.eslintIntegration": true,
   "eslint.packageManager": "yarn",
-  "latex.lint.onChange": true
+  "latex.lint.onChange": true,
+  "rust-analyzer.trace.server": "off"
 }
